@@ -1,0 +1,747 @@
+<!--
+  Cart Drawer Section
+  Slide-out cart drawer component with full cart functionality
+
+  Features:
+  - Slide-in drawer from right
+  - Real-time cart updates
+  - Quantity controls
+  - Remove items
+  - Discount code input
+  - Checkout button
+  - Empty cart state
+-->
+
+<div
+  id="cart-drawer-backdrop"
+  class="cart-drawer-backdrop"
+  onclick="Tanqory.cart.closeDrawer()"
+  style="display: none;"
+></div>
+
+<aside
+  id="cart-drawer"
+  class="cart-drawer"
+  aria-label="ตะกร้าสินค้า"
+  data-cart-drawer
+>
+  <!-- Header -->
+  <div class="cart-drawer-header">
+    <h2 class="cart-drawer-title">
+      <svg class="cart-drawer-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+      </svg>
+      ตะกร้าสินค้า
+      <span id="cart-drawer-count" class="cart-drawer-count">0</span>
+    </h2>
+    <button
+      type="button"
+      class="cart-drawer-close"
+      onclick="Tanqory.cart.closeDrawer()"
+      aria-label="ปิดตะกร้า"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Cart Content -->
+  <div class="cart-drawer-content">
+    <!-- Empty State -->
+    <div id="cart-drawer-empty" class="cart-drawer-empty" style="display: none;">
+      <div class="cart-drawer-empty-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+        </svg>
+      </div>
+      <h3 class="cart-drawer-empty-title">ตะกร้าว่างเปล่า</h3>
+      <p class="cart-drawer-empty-text">เริ่มเลือกซื้อสินค้าได้เลย</p>
+      <a href="/collections/all" class="cart-drawer-empty-button" onclick="Tanqory.cart.closeDrawer()">
+        เลือกซื้อสินค้า
+      </a>
+    </div>
+
+    <!-- Cart Items -->
+    <div id="cart-drawer-items" class="cart-drawer-items">
+      <!-- Items will be rendered here by JavaScript -->
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div id="cart-drawer-footer" class="cart-drawer-footer" style="display: none;">
+    <!-- Discount Code -->
+    @if ${section.settings.show_discount_code}
+    <div class="cart-drawer-discount">
+      <form id="cart-discount-form" class="cart-drawer-discount-form" onsubmit="Tanqory.cart.applyDiscount(event)">
+        <input
+          type="text"
+          id="cart-discount-input"
+          name="discount_code"
+          placeholder="รหัสส่วนลด"
+          class="cart-drawer-discount-input"
+        />
+        <button type="submit" class="cart-drawer-discount-button">
+          ใช้โค้ด
+        </button>
+      </form>
+      <div id="cart-discount-message" class="cart-drawer-discount-message" style="display: none;"></div>
+    </div>
+    @endif
+
+    <!-- Subtotal -->
+    <div class="cart-drawer-subtotal">
+      <span>ยอดรวม</span>
+      <span id="cart-drawer-subtotal-amount" class="cart-drawer-subtotal-amount">฿0.00</span>
+    </div>
+
+    @if ${section.settings.show_shipping_note}
+    <p class="cart-drawer-shipping-note">
+      ค่าจัดส่งจะคำนวณในขั้นตอนชำระเงิน
+    </p>
+    @endif
+
+    <!-- Checkout Button -->
+    <div class="cart-drawer-actions">
+      @if ${section.settings.show_view_cart}
+      <a href="/cart" class="cart-drawer-view-cart" onclick="Tanqory.cart.closeDrawer()">
+        ดูตะกร้า
+      </a>
+      @endif
+      <a
+        href="/checkout"
+        id="cart-drawer-checkout-btn"
+        class="cart-drawer-checkout"
+        onclick="Tanqory.cart.closeDrawer()"
+      >
+        ชำระเงิน
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</aside>
+
+<style>
+  /* Backdrop */
+  .cart-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .cart-drawer-backdrop.open {
+    opacity: 1;
+  }
+
+  /* Drawer */
+  .cart-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 420px;
+    height: 100vh;
+    background: #fff;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .cart-drawer.open {
+    transform: translateX(0);
+  }
+
+  /* Header */
+  .cart-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    flex-shrink: 0;
+  }
+
+  .cart-drawer-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
+  }
+
+  .cart-drawer-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .cart-drawer-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 6px;
+    background: var(--color-primary, #3b82f6);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 9999px;
+  }
+
+  .cart-drawer-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #6b7280;
+    transition: all 0.2s;
+  }
+
+  .cart-drawer-close:hover {
+    background: #f3f4f6;
+    color: #111827;
+  }
+
+  /* Content */
+  .cart-drawer-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 1.5rem;
+  }
+
+  /* Empty State */
+  .cart-drawer-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 1rem;
+    height: 100%;
+  }
+
+  .cart-drawer-empty-icon {
+    color: #d1d5db;
+    margin-bottom: 1rem;
+  }
+
+  .cart-drawer-empty-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0 0 0.5rem;
+  }
+
+  .cart-drawer-empty-text {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0 0 1.5rem;
+  }
+
+  .cart-drawer-empty-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-primary, #3b82f6);
+    color: white;
+    font-weight: 500;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .cart-drawer-empty-button:hover {
+    background: var(--color-primary-dark, #2563eb);
+  }
+
+  /* Cart Items */
+  .cart-drawer-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cart-drawer-item {
+    display: flex;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .cart-drawer-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .cart-drawer-item-image {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f9fafb;
+  }
+
+  .cart-drawer-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cart-drawer-item-details {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .cart-drawer-item-title {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111827;
+    margin: 0 0 0.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .cart-drawer-item-variant {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin: 0 0 0.5rem;
+  }
+
+  .cart-drawer-item-price {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #111827;
+  }
+
+  .cart-drawer-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+
+  .cart-drawer-quantity {
+    display: flex;
+    align-items: center;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .cart-drawer-quantity-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #6b7280;
+    transition: all 0.2s;
+  }
+
+  .cart-drawer-quantity-btn:hover {
+    background: #f3f4f6;
+    color: #111827;
+  }
+
+  .cart-drawer-quantity-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .cart-drawer-quantity-value {
+    min-width: 32px;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111827;
+    background: #f9fafb;
+  }
+
+  .cart-drawer-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: #9ca3af;
+    transition: all 0.2s;
+  }
+
+  .cart-drawer-remove:hover {
+    background: #fef2f2;
+    color: #ef4444;
+  }
+
+  /* Footer */
+  .cart-drawer-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    background: #f9fafb;
+    flex-shrink: 0;
+  }
+
+  /* Discount */
+  .cart-drawer-discount {
+    margin-bottom: 1rem;
+  }
+
+  .cart-drawer-discount-form {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .cart-drawer-discount-input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.875rem;
+  }
+
+  .cart-drawer-discount-input:focus {
+    outline: none;
+    border-color: var(--color-primary, #3b82f6);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  .cart-drawer-discount-button {
+    padding: 0.5rem 1rem;
+    background: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .cart-drawer-discount-button:hover {
+    background: #e5e7eb;
+  }
+
+  .cart-drawer-discount-message {
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+  }
+
+  .cart-drawer-discount-message.success {
+    background: #d1fae5;
+    color: #065f46;
+  }
+
+  .cart-drawer-discount-message.error {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+
+  /* Subtotal */
+  .cart-drawer-subtotal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    font-size: 1rem;
+    color: #374151;
+  }
+
+  .cart-drawer-subtotal-amount {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #111827;
+  }
+
+  .cart-drawer-shipping-note {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-align: center;
+    margin: 0 0 1rem;
+  }
+
+  /* Actions */
+  .cart-drawer-actions {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .cart-drawer-view-cart {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.875rem 1rem;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    color: #374151;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .cart-drawer-view-cart:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+  }
+
+  .cart-drawer-checkout {
+    flex: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1rem;
+    background: var(--color-primary, #3b82f6);
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .cart-drawer-checkout:hover {
+    background: var(--color-primary-dark, #2563eb);
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .cart-drawer {
+      max-width: 100%;
+    }
+  }
+
+  /* Loading State */
+  .cart-drawer-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .cart-drawer-loading-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #e5e7eb;
+    border-top-color: var(--color-primary, #3b82f6);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+</style>
+
+<script>
+  // Cart Drawer JavaScript (integrated with Tanqory SDK)
+  (function() {
+    // Wait for Tanqory to be ready
+    if (typeof Tanqory !== 'undefined' && Tanqory.cart) {
+      initCartDrawer();
+    } else {
+      document.addEventListener('tanqory:ready', initCartDrawer);
+    }
+
+    function initCartDrawer() {
+      const drawer = document.getElementById('cart-drawer');
+      const backdrop = document.getElementById('cart-drawer-backdrop');
+      const itemsContainer = document.getElementById('cart-drawer-items');
+      const emptyState = document.getElementById('cart-drawer-empty');
+      const footer = document.getElementById('cart-drawer-footer');
+      const countEl = document.getElementById('cart-drawer-count');
+      const subtotalEl = document.getElementById('cart-drawer-subtotal-amount');
+
+      // Register drawer methods with Tanqory
+      Tanqory.cart.openDrawer = openDrawer;
+      Tanqory.cart.closeDrawer = closeDrawer;
+      Tanqory.cart.applyDiscount = applyDiscount;
+
+      // Subscribe to cart updates
+      Tanqory.cart.subscribe(renderCart);
+
+      // Initial render
+      renderCart(Tanqory.cart.getState());
+
+      function openDrawer() {
+        drawer.classList.add('open');
+        backdrop.style.display = 'block';
+        requestAnimationFrame(() => {
+          backdrop.classList.add('open');
+        });
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeDrawer() {
+        drawer.classList.remove('open');
+        backdrop.classList.remove('open');
+        setTimeout(() => {
+          backdrop.style.display = 'none';
+        }, 300);
+        document.body.style.overflow = '';
+      }
+
+      function renderCart(cart) {
+        const items = cart?.items || [];
+        const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+        const subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+        // Update count
+        countEl.textContent = itemCount;
+
+        // Update subtotal
+        subtotalEl.textContent = formatPrice(subtotal);
+
+        // Toggle empty state
+        if (items.length === 0) {
+          emptyState.style.display = 'flex';
+          itemsContainer.style.display = 'none';
+          footer.style.display = 'none';
+        } else {
+          emptyState.style.display = 'none';
+          itemsContainer.style.display = 'flex';
+          footer.style.display = 'block';
+
+          // Render items
+          itemsContainer.innerHTML = items.map(item => `
+            <div class="cart-drawer-item" data-item-key="${item.key}">
+              <div class="cart-drawer-item-image">
+                <img src="${item.image || '/images/placeholder.png'}" alt="${item.title}" loading="lazy" />
+              </div>
+              <div class="cart-drawer-item-details">
+                <h4 class="cart-drawer-item-title">${item.title}</h4>
+                ${item.variantTitle ? `<p class="cart-drawer-item-variant">${item.variantTitle}</p>` : ''}
+                <p class="cart-drawer-item-price">${formatPrice(item.price * item.quantity)}</p>
+                <div class="cart-drawer-item-actions">
+                  <div class="cart-drawer-quantity">
+                    <button
+                      class="cart-drawer-quantity-btn"
+                      onclick="Tanqory.cart.updateQuantity('${item.key}', ${item.quantity - 1})"
+                      ${item.quantity <= 1 ? 'disabled' : ''}
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                      </svg>
+                    </button>
+                    <span class="cart-drawer-quantity-value">${item.quantity}</span>
+                    <button
+                      class="cart-drawer-quantity-btn"
+                      onclick="Tanqory.cart.updateQuantity('${item.key}', ${item.quantity + 1})"
+                    >
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                      </svg>
+                    </button>
+                  </div>
+                  <button
+                    class="cart-drawer-remove"
+                    onclick="Tanqory.cart.removeItem('${item.key}')"
+                    aria-label="ลบสินค้า"
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      async function applyDiscount(event) {
+        event.preventDefault();
+        const input = document.getElementById('cart-discount-input');
+        const message = document.getElementById('cart-discount-message');
+        const code = input.value.trim();
+
+        if (!code) return;
+
+        try {
+          await Tanqory.checkout.applyDiscount(code);
+          message.style.display = 'block';
+          message.className = 'cart-drawer-discount-message success';
+          message.textContent = 'ใช้โค้ดส่วนลดสำเร็จ!';
+          input.value = '';
+        } catch (err) {
+          message.style.display = 'block';
+          message.className = 'cart-drawer-discount-message error';
+          message.textContent = err.message || 'รหัสส่วนลดไม่ถูกต้อง';
+        }
+
+        setTimeout(() => {
+          message.style.display = 'none';
+        }, 3000);
+      }
+
+      function formatPrice(amount) {
+        return '฿' + amount.toLocaleString('th-TH', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      }
+
+      // Close on escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && drawer.classList.contains('open')) {
+          closeDrawer();
+        }
+      });
+    }
+  })();
+</script>
+
+<@schema>
+{
+  "name": "Cart Drawer",
+  "tag": "section",
+  "class": "cart-drawer-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_discount_code",
+      "label": "แสดงช่องกรอกโค้ดส่วนลด",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shipping_note",
+      "label": "แสดงหมายเหตุค่าจัดส่ง",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_cart",
+      "label": "แสดงปุ่มดูตะกร้า",
+      "default": true
+    }
+  ]
+}
+</@schema>

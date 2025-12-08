@@ -1,0 +1,300 @@
+<!--
+  Blog Header Section (blog-header.tanq)
+
+  Displays blog title, description, and optional breadcrumb.
+  Used at the top of blog listing pages.
+
+  Data available:
+  - blog: Current blog data
+  - section: Section settings
+-->
+
+<@schema>
+{
+  "name": "Blog Header",
+  "tag": "section",
+  "class": "section-blog-header",
+  "description": "Blog title and description header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "id": "showBreadcrumb",
+      "type": "checkbox",
+      "label": "Show Breadcrumb",
+      "default": true
+    },
+    {
+      "id": "showTitle",
+      "type": "checkbox",
+      "label": "Show Blog Title",
+      "default": true
+    },
+    {
+      "id": "showDescription",
+      "type": "checkbox",
+      "label": "Show Blog Description",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "id": "style",
+      "type": "select",
+      "label": "Header Style",
+      "options": [
+        { "value": "simple", "label": "Simple" },
+        { "value": "hero", "label": "Hero with Background" },
+        { "value": "minimal", "label": "Minimal" }
+      ],
+      "default": "simple"
+    },
+    {
+      "id": "backgroundColor",
+      "type": "color",
+      "label": "Background Color",
+      "default": "#f8f9fa"
+    },
+    {
+      "id": "textColor",
+      "type": "color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "id": "backgroundImage",
+      "type": "image_picker",
+      "label": "Background Image (Hero style)"
+    },
+    {
+      "id": "overlayOpacity",
+      "type": "range",
+      "label": "Overlay Opacity",
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "default": 40,
+      "unit": "%"
+    },
+    {
+      "id": "textAlign",
+      "type": "select",
+      "label": "Text Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "id": "paddingTop",
+      "type": "range",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    },
+    {
+      "id": "paddingBottom",
+      "type": "range",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 60,
+      "unit": "px"
+    }
+  ]
+}
+</@schema>
+
+<div
+  class="blog-header style-${section.settings.style || 'simple'}"
+  style="
+    --bg-color: ${section.settings.backgroundColor || '#f8f9fa'};
+    --text-color: ${section.settings.textColor || '#1a1a1a'};
+    --overlay-opacity: ${(section.settings.overlayOpacity || 40) / 100};
+    --text-align: ${section.settings.textAlign || 'center'};
+    --padding-top: ${section.settings.paddingTop || 60}px;
+    --padding-bottom: ${section.settings.paddingBottom || 60}px;
+  "
+>
+  <!-- Background Image for Hero Style -->
+  <@if condition="section.settings.style === 'hero' && section.settings.backgroundImage">
+    <div class="blog-header-bg">
+      <img
+        src="${section.settings.backgroundImage | image_url: width: 1920}"
+        alt=""
+        loading="eager"
+      />
+      <div class="blog-header-overlay"></div>
+    </div>
+  </@if>
+
+  <div class="blog-header-container">
+    <!-- Breadcrumb -->
+    <@if condition="section.settings.showBreadcrumb">
+      <nav class="blog-breadcrumb" aria-label="Breadcrumb">
+        <ol class="breadcrumb-list">
+          <li><a href="/">Home</a></li>
+          <li><a href="/blogs">Blogs</a></li>
+          <li aria-current="page">${blog.title}</li>
+        </ol>
+      </nav>
+    </@if>
+
+    <!-- Title -->
+    <@if condition="section.settings.showTitle">
+      <h1 class="blog-title">${blog.title}</h1>
+    </@if>
+
+    <!-- Description -->
+    <@if condition="section.settings.showDescription && blog.description">
+      <p class="blog-description">${blog.description}</p>
+    </@if>
+  </div>
+</div>
+
+<style>
+.blog-header {
+  position: relative;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+}
+
+.blog-header-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.blog-header-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.blog-header-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, var(--overlay-opacity));
+}
+
+.blog-header.style-hero {
+  color: #fff;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+}
+
+.blog-header-container {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  text-align: var(--text-align);
+}
+
+/* Breadcrumb */
+.blog-breadcrumb {
+  margin-bottom: 1.5rem;
+}
+
+.breadcrumb-list {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.875rem;
+  opacity: 0.8;
+  justify-content: var(--text-align);
+}
+
+.style-hero .breadcrumb-list {
+  opacity: 0.9;
+}
+
+.breadcrumb-list li {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumb-list li:not(:last-child)::after {
+  content: '/';
+  margin: 0 0.5rem;
+  opacity: 0.5;
+}
+
+.breadcrumb-list a {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.breadcrumb-list a:hover {
+  opacity: 0.7;
+}
+
+/* Title */
+.blog-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 700;
+  margin: 0 0 1rem;
+  line-height: 1.2;
+}
+
+.style-minimal .blog-title {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+/* Description */
+.blog-description {
+  font-size: 1.25rem;
+  max-width: 700px;
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
+.style-hero .blog-description {
+  opacity: 0.95;
+}
+
+.blog-header-container[style*="text-align: center"] .blog-description {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .blog-header-container {
+    padding: 0 1rem;
+  }
+
+  .breadcrumb-list {
+    justify-content: center;
+  }
+
+  .blog-header.style-hero {
+    min-height: 250px;
+  }
+
+  .blog-description {
+    font-size: 1rem;
+  }
+}
+</style>

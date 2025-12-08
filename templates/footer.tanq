@@ -1,0 +1,122 @@
+<!--
+  Footer Global Section Template (templates/footer.tanq)
+
+  Elementor/React-style template with inline settings
+  This template defines the default footer configuration
+
+  Data available:
+  - shop: Store information
+  - template: Template info and settings
+
+  Template Type: footer (global)
+-->
+
+<@schema>
+{
+  "name": "Footer",
+  "type": "footer",
+  "description": "Global footer section with links and info",
+  "global": true
+}
+</@schema>
+
+<!-- Footer Section -->
+<@section
+  id="footer"
+  type="footer"
+  settings={{
+    "logo": "",
+    "logoWidth": 100,
+    "showLogo": true,
+    "showStoreName": true,
+    "showDescription": true,
+    "description": "Your one-stop shop for quality products. We're committed to providing the best shopping experience.",
+    "showNewsletter": true,
+    "newsletterTitle": "Subscribe to our newsletter",
+    "newsletterSubtitle": "Get updates on new products and exclusive offers",
+    "newsletterPlaceholder": "Enter your email",
+    "newsletterButtonText": "Subscribe",
+    "showSocialLinks": true,
+    "facebookUrl": "",
+    "instagramUrl": "",
+    "twitterUrl": "",
+    "youtubeUrl": "",
+    "tiktokUrl": "",
+    "pinterestUrl": "",
+    "showPaymentIcons": true,
+    "paymentIcons": ["visa", "mastercard", "amex", "paypal", "apple-pay", "google-pay"],
+    "copyrightText": "© 2024 ${shop.name}. All rights reserved.",
+    "showPoweredBy": true,
+    "backgroundColor": "#1a1a1a",
+    "textColor": "#ffffff",
+    "linkColor": "#d1d5db",
+    "linkHoverColor": "#ffffff",
+    "accentColor": "#2563eb",
+    "borderColor": "#374151",
+    "paddingTop": 60,
+    "paddingBottom": 40
+  }}
+  blocks={{
+    "link-list-1": {
+      "type": "link_list",
+      "settings": {
+        "heading": "Shop",
+        "links": [
+          {"title": "All Products", "url": "/collections/all"},
+          {"title": "New Arrivals", "url": "/collections/new-arrivals"},
+          {"title": "Best Sellers", "url": "/collections/best-sellers"},
+          {"title": "Sale", "url": "/collections/sale"}
+        ]
+      }
+    },
+    "link-list-2": {
+      "type": "link_list",
+      "settings": {
+        "heading": "Customer Service",
+        "links": [
+          {"title": "Contact Us", "url": "/pages/contact"},
+          {"title": "Shipping & Delivery", "url": "/pages/shipping"},
+          {"title": "Returns & Exchanges", "url": "/pages/returns"},
+          {"title": "FAQ", "url": "/pages/faq"}
+        ]
+      }
+    },
+    "link-list-3": {
+      "type": "link_list",
+      "settings": {
+        "heading": "About",
+        "links": [
+          {"title": "Our Story", "url": "/pages/about"},
+          {"title": "Blog", "url": "/blogs/news"},
+          {"title": "Careers", "url": "/pages/careers"},
+          {"title": "Press", "url": "/pages/press"}
+        ]
+      }
+    },
+    "link-list-4": {
+      "type": "link_list",
+      "settings": {
+        "heading": "Legal",
+        "links": [
+          {"title": "Privacy Policy", "url": "/pages/privacy-policy"},
+          {"title": "Terms of Service", "url": "/pages/terms-of-service"},
+          {"title": "Cookie Policy", "url": "/pages/cookie-policy"}
+        ]
+      }
+    },
+    "contact-info": {
+      "type": "contact_info",
+      "settings": {
+        "heading": "Contact Us",
+        "showAddress": true,
+        "address": "123 Commerce Street, City, Country",
+        "showPhone": true,
+        "phone": "+1 (555) 123-4567",
+        "showEmail": true,
+        "email": "support@example.com",
+        "showHours": true,
+        "hours": "Mon-Fri: 9AM - 6PM"
+      }
+    }
+  }}
+/>

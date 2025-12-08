@@ -1,0 +1,99 @@
+<!--
+  Blog Template (blog.tanq)
+
+  Elementor/React-style template with inline settings
+  This template is rendered inside Layout's ${content_for_layout}
+
+  Data available:
+  - shop: Store information
+  - blog: Current blog data
+  - articles: Paginated articles in this blog
+  - pagination: Pagination info
+  - template: Template info and settings
+
+  Template Type: blog
+  Layout: default
+-->
+
+<@schema>
+{
+  "name": "Blog",
+  "type": "blog",
+  "description": "Blog listing page with articles",
+  "layout": "default"
+}
+</@schema>
+
+<!-- Template Content -->
+<div class="template-blog">
+
+  <!-- Blog Header (Title + Description) -->
+  <@section
+    id="blog-header"
+    type="blog-header"
+    settings={{
+      "showBreadcrumb": true,
+      "showDescription": true,
+      "showArticleCount": true,
+      "textAlign": "center",
+      "backgroundColor": "#f9fafb",
+      "textColor": "#1a1a1a",
+      "paddingTop": 60,
+      "paddingBottom": 60
+    }}
+  />
+
+  <!-- Articles Grid -->
+  <@section
+    id="blog-articles"
+    type="blog-articles"
+    settings={{
+      "layout": "grid",
+      "columns": 3,
+      "articlesPerPage": 9,
+      "showFeaturedImage": true,
+      "imageRatio": "landscape",
+      "showDate": true,
+      "showAuthor": true,
+      "showExcerpt": true,
+      "excerptLength": 150,
+      "showReadMore": true,
+      "readMoreText": "Read More",
+      "showTags": false,
+      "backgroundColor": "#ffffff",
+      "textColor": "#1a1a1a",
+      "accentColor": "#2563eb",
+      "paddingTop": 40,
+      "paddingBottom": 60
+    }}
+  />
+
+  <!-- Newsletter Signup -->
+  <@section
+    id="newsletter"
+    type="newsletter"
+    settings={{
+      "title": "Stay Updated",
+      "subtitle": "Subscribe to our newsletter for the latest articles and updates.",
+      "placeholder": "Enter your email address",
+      "buttonText": "Subscribe",
+      "successMessage": "Thank you for subscribing!",
+      "backgroundColor": "#1a1a1a",
+      "textColor": "#ffffff",
+      "buttonColor": "#ffffff",
+      "buttonTextColor": "#1a1a1a",
+      "showPrivacyNote": true,
+      "privacyNote": "We respect your privacy. Unsubscribe at any time."
+    }}
+  />
+
+  <!-- Dynamic Sections (added by user in Theme Editor) -->
+  <@sections />
+
+</div>
+
+<style>
+.template-blog {
+  min-height: 60vh;
+}
+</style>

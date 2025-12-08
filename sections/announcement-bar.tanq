@@ -1,0 +1,222 @@
+<@schema>
+{
+  "name": "Announcement Bar",
+  "category": "header",
+  "description": "Top banner for announcements, promotions, or important messages",
+  "icon": "megaphone",
+  "settings": [
+    {
+      "id": "text",
+      "type": "text",
+      "label": "Announcement Text",
+      "default": "Free shipping on orders over $50!"
+    },
+    {
+      "id": "link",
+      "type": "url",
+      "label": "Link URL",
+      "default": ""
+    },
+    {
+      "id": "linkText",
+      "type": "text",
+      "label": "Link Text",
+      "default": "Shop Now"
+    },
+    {
+      "id": "backgroundColor",
+      "type": "color",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "id": "textColor",
+      "type": "color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "id": "showDismiss",
+      "type": "checkbox",
+      "label": "Show Dismiss Button",
+      "default": true
+    },
+    {
+      "id": "autoRotate",
+      "type": "checkbox",
+      "label": "Auto Rotate Messages",
+      "default": false
+    },
+    {
+      "id": "rotateSpeed",
+      "type": "range",
+      "label": "Rotate Speed (seconds)",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    }
+  ],
+  "blocks": [
+    {
+      "type": "message",
+      "name": "Additional Message",
+      "settings": [
+        {
+          "id": "text",
+          "type": "text",
+          "label": "Message Text",
+          "default": "New arrivals every week"
+        },
+        {
+          "id": "link",
+          "type": "url",
+          "label": "Link URL",
+          "default": ""
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default Announcement",
+      "category": "header"
+    }
+  ]
+}
+</@schema>
+
+<div
+  class="announcement-bar"
+  style="
+    background-color: ${section.settings.backgroundColor};
+    color: ${section.settings.textColor};
+  "
+  data-section-id="${section.id}"
+  data-section-type="announcement-bar"
+  data-auto-rotate="${section.settings.autoRotate}"
+  data-rotate-speed="${section.settings.rotateSpeed}"
+>
+  <div class="announcement-container">
+    <div class="announcement-messages">
+      <!-- Primary Message -->
+      <div class="announcement-message active">
+        <span>${section.settings.text}</span>
+        <@if condition="section.settings.link">
+          <a href="${section.settings.link}" class="announcement-link">
+            ${section.settings.linkText}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+        </@if>
+      </div>
+
+      <!-- Additional Messages from Blocks -->
+      <@for each="section.blocks" as="block">
+        <@if condition="block.type === 'message'">
+          <div class="announcement-message">
+            <span>${block.settings.text}</span>
+            <@if condition="block.settings.link">
+              <a href="${block.settings.link}" class="announcement-link">
+                Learn More
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </a>
+            </@if>
+          </div>
+        </@if>
+      </@for>
+    </div>
+
+    <@if condition="section.settings.showDismiss">
+      <button class="announcement-dismiss" aria-label="Dismiss announcement">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </@if>
+  </div>
+</div>
+
+<style>
+.announcement-bar {
+  position: relative;
+  z-index: 101;
+}
+
+.announcement-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0.75rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.announcement-messages {
+  position: relative;
+  flex: 1;
+  text-align: center;
+  overflow: hidden;
+}
+
+.announcement-message {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.announcement-message.active {
+  display: flex;
+}
+
+.announcement-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 0.2s;
+}
+
+.announcement-link:hover {
+  opacity: 0.8;
+}
+
+.announcement-dismiss {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  padding: 0.25rem;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
+}
+
+.announcement-dismiss:hover {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .announcement-container {
+    padding: 0.5rem 1rem;
+  }
+
+  .announcement-message {
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+  }
+}
+</style>

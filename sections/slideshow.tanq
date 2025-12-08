@@ -1,0 +1,541 @@
+<@schema>
+{
+  "name": "Slideshow",
+  "category": "hero",
+  "description": "Full-width image carousel with text overlays",
+  "icon": "image",
+  "settings": [
+    {
+      "id": "autoplay",
+      "type": "checkbox",
+      "label": "Autoplay",
+      "default": true
+    },
+    {
+      "id": "autoplaySpeed",
+      "type": "range",
+      "label": "Autoplay Speed (seconds)",
+      "min": 3,
+      "max": 10,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "id": "showArrows",
+      "type": "checkbox",
+      "label": "Show Navigation Arrows",
+      "default": true
+    },
+    {
+      "id": "showDots",
+      "type": "checkbox",
+      "label": "Show Pagination Dots",
+      "default": true
+    },
+    {
+      "id": "slideHeight",
+      "type": "select",
+      "label": "Slide Height",
+      "options": [
+        { "value": "small", "label": "Small (400px)" },
+        { "value": "medium", "label": "Medium (500px)" },
+        { "value": "large", "label": "Large (600px)" },
+        { "value": "fullscreen", "label": "Full Screen" }
+      ],
+      "default": "large"
+    },
+    {
+      "id": "transition",
+      "type": "select",
+      "label": "Transition Effect",
+      "options": [
+        { "value": "slide", "label": "Slide" },
+        { "value": "fade", "label": "Fade" }
+      ],
+      "default": "slide"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Image",
+          "default": ""
+        },
+        {
+          "id": "mobileImage",
+          "type": "image_picker",
+          "label": "Mobile Image (optional)",
+          "default": ""
+        },
+        {
+          "id": "overlayOpacity",
+          "type": "range",
+          "label": "Overlay Opacity",
+          "min": 0,
+          "max": 100,
+          "step": 10,
+          "default": 30
+        },
+        {
+          "id": "contentPosition",
+          "type": "select",
+          "label": "Content Position",
+          "options": [
+            { "value": "top-left", "label": "Top Left" },
+            { "value": "top-center", "label": "Top Center" },
+            { "value": "top-right", "label": "Top Right" },
+            { "value": "center-left", "label": "Center Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "center-right", "label": "Center Right" },
+            { "value": "bottom-left", "label": "Bottom Left" },
+            { "value": "bottom-center", "label": "Bottom Center" },
+            { "value": "bottom-right", "label": "Bottom Right" }
+          ],
+          "default": "center"
+        },
+        {
+          "id": "subheading",
+          "type": "text",
+          "label": "Subheading",
+          "default": ""
+        },
+        {
+          "id": "heading",
+          "type": "text",
+          "label": "Heading",
+          "default": "Welcome to Our Store"
+        },
+        {
+          "id": "description",
+          "type": "text",
+          "label": "Description",
+          "default": ""
+        },
+        {
+          "id": "buttonText",
+          "type": "text",
+          "label": "Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "id": "buttonUrl",
+          "type": "url",
+          "label": "Button URL",
+          "default": "/collections/all"
+        },
+        {
+          "id": "buttonStyle",
+          "type": "select",
+          "label": "Button Style",
+          "options": [
+            { "value": "primary", "label": "Primary (Filled)" },
+            { "value": "secondary", "label": "Secondary (Outline)" }
+          ],
+          "default": "primary"
+        },
+        {
+          "id": "textColor",
+          "type": "color",
+          "label": "Text Color",
+          "default": "#ffffff"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default Slideshow",
+      "category": "hero",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "heading": "New Collection",
+            "description": "Discover our latest arrivals",
+            "buttonText": "Shop Now",
+            "buttonUrl": "/collections/new-arrivals"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "heading": "Summer Sale",
+            "description": "Up to 50% off selected items",
+            "buttonText": "View Sale",
+            "buttonUrl": "/collections/sale"
+          }
+        }
+      ]
+    }
+  ]
+}
+</@schema>
+
+<section
+  class="slideshow-section height-${section.settings.slideHeight}"
+  data-section-id="${section.id}"
+  data-section-type="slideshow"
+  data-autoplay="${section.settings.autoplay}"
+  data-autoplay-speed="${section.settings.autoplaySpeed}"
+  data-transition="${section.settings.transition}"
+>
+  <div class="slideshow-wrapper">
+    <div class="slideshow-track">
+      <@for each="section.blocks" as="block" index="index">
+        <@if condition="block.type === 'slide'">
+          <div
+            class="slideshow-slide ${index === 0 ? 'active' : ''}"
+            data-block-id="${block.id}"
+            style="color: ${block.settings.textColor};"
+          >
+            <!-- Background Image -->
+            <div class="slide-background">
+              <@if condition="block.settings.image">
+                <picture>
+                  <@if condition="block.settings.mobileImage">
+                    <source media="(max-width: 768px)" srcset="${block.settings.mobileImage | asset_url}" />
+                  </@if>
+                  <img
+                    src="${block.settings.image | asset_url}"
+                    alt="${block.settings.heading}"
+                    loading="${index === 0 ? 'eager' : 'lazy'}"
+                  />
+                </picture>
+              </@if>
+              <@else>
+                <div class="slide-placeholder"></div>
+              </@else>
+              <div class="slide-overlay" style="opacity: ${block.settings.overlayOpacity / 100};"></div>
+            </div>
+
+            <!-- Content -->
+            <div class="slide-content position-${block.settings.contentPosition}">
+              <div class="slide-content-inner">
+                <@if condition="block.settings.subheading">
+                  <span class="slide-subheading">${block.settings.subheading}</span>
+                </@if>
+                <@if condition="block.settings.heading">
+                  <h2 class="slide-heading">${block.settings.heading}</h2>
+                </@if>
+                <@if condition="block.settings.description">
+                  <p class="slide-description">${block.settings.description}</p>
+                </@if>
+                <@if condition="block.settings.buttonText">
+                  <a href="${block.settings.buttonUrl}" class="slide-btn btn-${block.settings.buttonStyle}">
+                    ${block.settings.buttonText}
+                  </a>
+                </@if>
+              </div>
+            </div>
+          </div>
+        </@if>
+      </@for>
+    </div>
+
+    <!-- Navigation Arrows -->
+    <@if condition="section.settings.showArrows">
+      <button class="slideshow-arrow arrow-prev" aria-label="Previous slide">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <button class="slideshow-arrow arrow-next" aria-label="Next slide">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </@if>
+
+    <!-- Pagination Dots -->
+    <@if condition="section.settings.showDots">
+      <div class="slideshow-dots">
+        <@for each="section.blocks" as="block" index="index">
+          <@if condition="block.type === 'slide'">
+            <button
+              class="slideshow-dot ${index === 0 ? 'active' : ''}"
+              data-slide-index="${index}"
+              aria-label="Go to slide ${index + 1}"
+            ></button>
+          </@if>
+        </@for>
+      </div>
+    </@if>
+  </div>
+</section>
+
+<style>
+.slideshow-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.height-small { height: 400px; }
+.height-medium { height: 500px; }
+.height-large { height: 600px; }
+.height-fullscreen { height: 100vh; }
+
+.slideshow-wrapper {
+  position: relative;
+  height: 100%;
+}
+
+.slideshow-track {
+  position: relative;
+  height: 100%;
+}
+
+.slideshow-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.slideshow-slide.active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
+}
+
+.slide-background {
+  position: absolute;
+  inset: 0;
+}
+
+.slide-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slide-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.slide-overlay {
+  position: absolute;
+  inset: 0;
+  background: #000;
+}
+
+.slide-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  padding: 4rem 2rem;
+  z-index: 2;
+}
+
+.position-top-left { justify-content: flex-start; align-items: flex-start; }
+.position-top-center { justify-content: center; align-items: flex-start; }
+.position-top-right { justify-content: flex-end; align-items: flex-start; }
+.position-center-left { justify-content: flex-start; align-items: center; }
+.position-center { justify-content: center; align-items: center; text-align: center; }
+.position-center-right { justify-content: flex-end; align-items: center; text-align: right; }
+.position-bottom-left { justify-content: flex-start; align-items: flex-end; }
+.position-bottom-center { justify-content: center; align-items: flex-end; text-align: center; }
+.position-bottom-right { justify-content: flex-end; align-items: flex-end; text-align: right; }
+
+.slide-content-inner {
+  max-width: 700px;
+}
+
+.slide-subheading {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 1rem;
+  opacity: 0.9;
+}
+
+.slide-heading {
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0 0 1rem 0;
+}
+
+.slide-description {
+  font-size: 1.125rem;
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
+  opacity: 0.9;
+  max-width: 500px;
+}
+
+.slide-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 1rem 2.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background: #fff;
+  color: #000;
+}
+
+.btn-primary:hover {
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: currentColor;
+  border: 2px solid currentColor;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.slideshow-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  transition: all 0.3s;
+}
+
+.arrow-prev { left: 1.5rem; }
+.arrow-next { right: 1.5rem; }
+
+.slideshow-arrow:hover {
+  background: #fff;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.slideshow-dots {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.slideshow-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.slideshow-dot.active,
+.slideshow-dot:hover {
+  background: #fff;
+  transform: scale(1.2);
+}
+
+@media (max-width: 768px) {
+  .height-large { height: 500px; }
+  .height-medium { height: 400px; }
+
+  .slide-content {
+    padding: 2rem 1rem;
+  }
+
+  .slide-heading {
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+  }
+
+  .slideshow-arrow {
+    width: 40px;
+    height: 40px;
+  }
+
+  .arrow-prev { left: 0.75rem; }
+  .arrow-next { right: 0.75rem; }
+}
+</style>
+
+<script>
+(function() {
+  const section = document.querySelector('[data-section-type="slideshow"][data-section-id="${section.id}"]');
+  if (!section) return;
+
+  const track = section.querySelector('.slideshow-track');
+  const slides = section.querySelectorAll('.slideshow-slide');
+  const dots = section.querySelectorAll('.slideshow-dot');
+  const prevBtn = section.querySelector('.arrow-prev');
+  const nextBtn = section.querySelector('.arrow-next');
+
+  const autoplay = section.dataset.autoplay === 'true';
+  const autoplaySpeed = parseInt(section.dataset.autoplaySpeed) * 1000;
+  let currentIndex = 0;
+  let autoplayInterval;
+
+  function goToSlide(index) {
+    slides[currentIndex].classList.remove('active');
+    dots[currentIndex]?.classList.remove('active');
+
+    currentIndex = (index + slides.length) % slides.length;
+
+    slides[currentIndex].classList.add('active');
+    dots[currentIndex]?.classList.add('active');
+  }
+
+  function nextSlide() {
+    goToSlide(currentIndex + 1);
+  }
+
+  function prevSlide() {
+    goToSlide(currentIndex - 1);
+  }
+
+  function startAutoplay() {
+    if (autoplay) {
+      autoplayInterval = setInterval(nextSlide, autoplaySpeed);
+    }
+  }
+
+  function stopAutoplay() {
+    clearInterval(autoplayInterval);
+  }
+
+  if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); stopAutoplay(); startAutoplay(); });
+  if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); stopAutoplay(); startAutoplay(); });
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      goToSlide(index);
+      stopAutoplay();
+      startAutoplay();
+    });
+  });
+
+  startAutoplay();
+
+  section.addEventListener('mouseenter', stopAutoplay);
+  section.addEventListener('mouseleave', startAutoplay);
+})();
+</script>

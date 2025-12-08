@@ -1,0 +1,389 @@
+<@schema>
+{
+  "name": "Video",
+  "category": "content",
+  "description": "Embed video content with customizable player",
+  "icon": "video",
+  "settings": [
+    {
+      "id": "heading",
+      "type": "text",
+      "label": "Heading",
+      "default": ""
+    },
+    {
+      "id": "subheading",
+      "type": "text",
+      "label": "Subheading",
+      "default": ""
+    },
+    {
+      "id": "videoUrl",
+      "type": "url",
+      "label": "Video URL (YouTube/Vimeo)",
+      "default": ""
+    },
+    {
+      "id": "videoFile",
+      "type": "video_picker",
+      "label": "Or Upload Video File",
+      "default": ""
+    },
+    {
+      "id": "coverImage",
+      "type": "image_picker",
+      "label": "Cover Image",
+      "default": ""
+    },
+    {
+      "id": "autoplay",
+      "type": "checkbox",
+      "label": "Autoplay (muted)",
+      "default": false
+    },
+    {
+      "id": "loop",
+      "type": "checkbox",
+      "label": "Loop Video",
+      "default": false
+    },
+    {
+      "id": "showControls",
+      "type": "checkbox",
+      "label": "Show Controls",
+      "default": true
+    },
+    {
+      "id": "aspectRatio",
+      "type": "select",
+      "label": "Aspect Ratio",
+      "options": [
+        { "value": "16:9", "label": "16:9 (Widescreen)" },
+        { "value": "4:3", "label": "4:3 (Standard)" },
+        { "value": "1:1", "label": "1:1 (Square)" },
+        { "value": "9:16", "label": "9:16 (Vertical)" },
+        { "value": "21:9", "label": "21:9 (Cinematic)" }
+      ],
+      "default": "16:9"
+    },
+    {
+      "id": "contentWidth",
+      "type": "select",
+      "label": "Content Width",
+      "options": [
+        { "value": "narrow", "label": "Narrow" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "wide", "label": "Wide" },
+        { "value": "full", "label": "Full Width" }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "backgroundColor",
+      "type": "color",
+      "label": "Background Color",
+      "default": "#000000"
+    },
+    {
+      "id": "textColor",
+      "type": "color",
+      "label": "Text Color",
+      "default": "#ffffff"
+    },
+    {
+      "id": "description",
+      "type": "richtext",
+      "label": "Description",
+      "default": ""
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default Video",
+      "category": "content"
+    }
+  ]
+}
+</@schema>
+
+<section
+  class="video-section"
+  style="
+    background-color: ${section.settings.backgroundColor};
+    color: ${section.settings.textColor};
+  "
+  data-section-id="${section.id}"
+  data-section-type="video"
+>
+  <div class="video-container container-${section.settings.contentWidth}">
+    <@if condition="section.settings.heading || section.settings.subheading">
+      <div class="video-header">
+        <@if condition="section.settings.subheading">
+          <span class="video-subheading">${section.settings.subheading}</span>
+        </@if>
+        <@if condition="section.settings.heading">
+          <h2 class="video-heading">${section.settings.heading}</h2>
+        </@if>
+      </div>
+    </@if>
+
+    <div class="video-wrapper aspect-${section.settings.aspectRatio | replace: ':', '-'}">
+      <@if condition="section.settings.videoUrl">
+        <!-- YouTube/Vimeo Embed -->
+        <div class="video-embed" data-video-url="${section.settings.videoUrl}">
+          <@if condition="section.settings.coverImage">
+            <div class="video-cover" style="background-image: url('${section.settings.coverImage | asset_url}');">
+              <button class="video-play-btn" aria-label="Play video">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+              </button>
+            </div>
+          </@if>
+          <iframe
+            class="video-iframe"
+            src=""
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy"
+          ></iframe>
+        </div>
+      </@if>
+
+      <@if condition="section.settings.videoFile && !section.settings.videoUrl">
+        <!-- Self-hosted Video -->
+        <video
+          class="video-player"
+          src="${section.settings.videoFile | asset_url}"
+          poster="${section.settings.coverImage | asset_url}"
+          ${section.settings.autoplay ? 'autoplay muted' : ''}
+          ${section.settings.loop ? 'loop' : ''}
+          ${section.settings.showControls ? 'controls' : ''}
+          playsinline
+        ></video>
+      </@if>
+
+      <@if condition="!section.settings.videoUrl && !section.settings.videoFile">
+        <!-- Placeholder -->
+        <div class="video-placeholder">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+            <line x1="7" y1="2" x2="7" y2="22"></line>
+            <line x1="17" y1="2" x2="17" y2="22"></line>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <line x1="2" y1="7" x2="7" y2="7"></line>
+            <line x1="2" y1="17" x2="7" y2="17"></line>
+            <line x1="17" y1="17" x2="22" y2="17"></line>
+            <line x1="17" y1="7" x2="22" y2="7"></line>
+          </svg>
+          <span>Add a video URL or upload a video file</span>
+        </div>
+      </@if>
+    </div>
+
+    <@if condition="section.settings.description">
+      <div class="video-description">
+        ${section.settings.description}
+      </div>
+    </@if>
+  </div>
+</section>
+
+<style>
+.video-section {
+  padding: 4rem 2rem;
+}
+
+.video-container {
+  margin: 0 auto;
+}
+
+.container-narrow { max-width: 800px; }
+.container-medium { max-width: 1000px; }
+.container-wide { max-width: 1200px; }
+.container-full { max-width: 100%; padding: 0; }
+
+.video-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.video-subheading {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  margin-bottom: 0.5rem;
+}
+
+.video-heading {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 700;
+  margin: 0;
+}
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #000;
+}
+
+.aspect-16-9 { aspect-ratio: 16 / 9; }
+.aspect-4-3 { aspect-ratio: 4 / 3; }
+.aspect-1-1 { aspect-ratio: 1 / 1; }
+.aspect-9-16 { aspect-ratio: 9 / 16; max-width: 400px; margin: 0 auto; }
+.aspect-21-9 { aspect-ratio: 21 / 9; }
+
+.video-embed {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.video-cover {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.video-cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.video-play-btn {
+  position: relative;
+  z-index: 1;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.video-play-btn:hover {
+  transform: scale(1.1);
+  background: #fff;
+}
+
+.video-play-btn svg {
+  margin-left: 4px;
+}
+
+.video-iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.video-player {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  padding: 2rem;
+}
+
+.video-description {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.7;
+  opacity: 0.8;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 768px) {
+  .video-section {
+    padding: 3rem 1rem;
+  }
+
+  .container-full {
+    padding: 0 1rem;
+  }
+
+  .video-wrapper {
+    border-radius: 8px;
+  }
+
+  .video-play-btn {
+    width: 60px;
+    height: 60px;
+  }
+
+  .video-play-btn svg {
+    width: 48px;
+    height: 48px;
+  }
+}
+</style>
+
+<script>
+(function() {
+  const section = document.querySelector('[data-section-type="video"][data-section-id="${section.id}"]');
+  if (!section) return;
+
+  const embed = section.querySelector('.video-embed');
+  if (!embed) return;
+
+  const cover = embed.querySelector('.video-cover');
+  const iframe = embed.querySelector('.video-iframe');
+  const videoUrl = embed.dataset.videoUrl;
+
+  function getEmbedUrl(url) {
+    // YouTube
+    const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&?\/]+)/);
+    if (ytMatch) {
+      return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&rel=0`;
+    }
+    // Vimeo
+    const vimeoMatch = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+    if (vimeoMatch) {
+      return `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`;
+    }
+    return url;
+  }
+
+  if (cover) {
+    cover.addEventListener('click', () => {
+      iframe.src = getEmbedUrl(videoUrl);
+      cover.style.display = 'none';
+    });
+  } else if (videoUrl) {
+    iframe.src = getEmbedUrl(videoUrl);
+  }
+})();
+</script>

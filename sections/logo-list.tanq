@@ -1,0 +1,362 @@
+<@schema>
+{
+  "name": "Logo List",
+  "category": "content",
+  "description": "Display partner, brand, or press logos",
+  "icon": "award",
+  "settings": [
+    {
+      "id": "heading",
+      "type": "text",
+      "label": "Heading",
+      "default": "As Featured In"
+    },
+    {
+      "id": "subheading",
+      "type": "text",
+      "label": "Subheading",
+      "default": ""
+    },
+    {
+      "id": "layout",
+      "type": "select",
+      "label": "Layout",
+      "options": [
+        { "value": "grid", "label": "Grid" },
+        { "value": "scroll", "label": "Auto Scroll" },
+        { "value": "inline", "label": "Inline" }
+      ],
+      "default": "inline"
+    },
+    {
+      "id": "columns",
+      "type": "range",
+      "label": "Columns (Grid Layout)",
+      "min": 3,
+      "max": 8,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "id": "logoSize",
+      "type": "select",
+      "label": "Logo Size",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "grayscale",
+      "type": "checkbox",
+      "label": "Grayscale Logos",
+      "default": true
+    },
+    {
+      "id": "backgroundColor",
+      "type": "color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "id": "textColor",
+      "type": "color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "id": "scrollSpeed",
+      "type": "range",
+      "label": "Scroll Speed (seconds)",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "default": 30
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Logo Image",
+          "default": ""
+        },
+        {
+          "id": "name",
+          "type": "text",
+          "label": "Company Name",
+          "default": "Brand Name"
+        },
+        {
+          "id": "link",
+          "type": "url",
+          "label": "Link (optional)",
+          "default": ""
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default Logo List",
+      "category": "content",
+      "blocks": [
+        { "type": "logo", "settings": { "name": "Company A" } },
+        { "type": "logo", "settings": { "name": "Company B" } },
+        { "type": "logo", "settings": { "name": "Company C" } },
+        { "type": "logo", "settings": { "name": "Company D" } },
+        { "type": "logo", "settings": { "name": "Company E" } }
+      ]
+    }
+  ]
+}
+</@schema>
+
+<section
+  class="logo-list-section"
+  style="
+    background-color: ${section.settings.backgroundColor};
+    color: ${section.settings.textColor};
+  "
+  data-section-id="${section.id}"
+  data-section-type="logo-list"
+  data-layout="${section.settings.layout}"
+>
+  <div class="logo-list-container">
+    <@if condition="section.settings.heading || section.settings.subheading">
+      <div class="logo-list-header">
+        <@if condition="section.settings.subheading">
+          <span class="logo-list-subheading">${section.settings.subheading}</span>
+        </@if>
+        <@if condition="section.settings.heading">
+          <h2 class="logo-list-heading">${section.settings.heading}</h2>
+        </@if>
+      </div>
+    </@if>
+
+    <div
+      class="logo-list-wrapper layout-${section.settings.layout} size-${section.settings.logoSize} ${section.settings.grayscale ? 'grayscale' : ''}"
+      style="--scroll-speed: ${section.settings.scrollSpeed}s; --columns: ${section.settings.columns};"
+    >
+      <div class="logo-list-track">
+        <@for each="section.blocks" as="block">
+          <@if condition="block.type === 'logo'">
+            <div class="logo-item" data-block-id="${block.id}">
+              <@if condition="block.settings.link">
+                <a href="${block.settings.link}" target="_blank" rel="noopener" aria-label="${block.settings.name}">
+              </@if>
+
+              <@if condition="block.settings.image">
+                <img
+                  src="${block.settings.image | asset_url}"
+                  alt="${block.settings.name}"
+                  loading="lazy"
+                />
+              </@if>
+              <@else>
+                <div class="logo-placeholder">
+                  ${block.settings.name}
+                </div>
+              </@else>
+
+              <@if condition="block.settings.link">
+                </a>
+              </@if>
+            </div>
+          </@if>
+        </@for>
+
+        <!-- Duplicate for infinite scroll -->
+        <@if condition="section.settings.layout === 'scroll'">
+          <@for each="section.blocks" as="block">
+            <@if condition="block.type === 'logo'">
+              <div class="logo-item" aria-hidden="true">
+                <@if condition="block.settings.image">
+                  <img
+                    src="${block.settings.image | asset_url}"
+                    alt=""
+                    loading="lazy"
+                  />
+                </@if>
+                <@else>
+                  <div class="logo-placeholder">
+                    ${block.settings.name}
+                  </div>
+                </@else>
+              </div>
+            </@if>
+          </@for>
+        </@if>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.logo-list-section {
+  padding: 4rem 2rem;
+  overflow: hidden;
+}
+
+.logo-list-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.logo-list-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.logo-list-subheading {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  margin-bottom: 0.5rem;
+}
+
+.logo-list-heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.logo-list-wrapper {
+  width: 100%;
+}
+
+.logo-list-wrapper.grayscale .logo-item img {
+  filter: grayscale(100%);
+  opacity: 0.6;
+  transition: filter 0.3s, opacity 0.3s;
+}
+
+.logo-list-wrapper.grayscale .logo-item:hover img {
+  filter: grayscale(0%);
+  opacity: 1;
+}
+
+/* Grid Layout */
+.layout-grid .logo-list-track {
+  display: grid;
+  grid-template-columns: repeat(var(--columns), 1fr);
+  gap: 2rem;
+}
+
+/* Inline Layout */
+.layout-inline .logo-list-track {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
+}
+
+/* Scroll Layout */
+.layout-scroll {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.layout-scroll .logo-list-track {
+  display: flex;
+  gap: 4rem;
+  animation: scroll var(--scroll-speed) linear infinite;
+  width: max-content;
+}
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.layout-scroll:hover .logo-list-track {
+  animation-play-state: paused;
+}
+
+/* Logo Item */
+.logo-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-item a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-item img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Sizes */
+.size-small .logo-item img,
+.size-small .logo-placeholder {
+  max-height: 30px;
+}
+
+.size-medium .logo-item img,
+.size-medium .logo-placeholder {
+  max-height: 50px;
+}
+
+.size-large .logo-item img,
+.size-large .logo-placeholder {
+  max-height: 70px;
+}
+
+.logo-placeholder {
+  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: inherit;
+  opacity: 0.5;
+  white-space: nowrap;
+}
+
+@media (max-width: 1024px) {
+  .layout-grid .logo-list-track {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .logo-list-section {
+    padding: 3rem 1rem;
+  }
+
+  .layout-grid .logo-list-track {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .layout-inline .logo-list-track {
+    gap: 2rem;
+  }
+
+  .size-medium .logo-item img,
+  .size-medium .logo-placeholder {
+    max-height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .layout-grid .logo-list-track {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>

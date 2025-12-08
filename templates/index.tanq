@@ -1,0 +1,191 @@
+<!--
+  Homepage Template (index.tanq)
+
+  Elementor/React-style template with inline settings
+  This template is rendered inside Layout's ${content_for_layout}
+
+  Data available:
+  - shop: Store information
+  - cart: Current cart
+  - customer: Logged in customer (if any)
+  - collections: Featured collections
+  - products: Featured products
+  - template: Template info and settings
+
+  Template Type: index (homepage)
+  Layout: default (inherited from theme)
+-->
+
+<@schema>
+{
+  "name": "Homepage",
+  "type": "index",
+  "description": "Main landing page template",
+  "layout": "default"
+}
+</@schema>
+
+<!-- Template Content (rendered inside Layout's main) -->
+<div class="template-index">
+
+  <!-- Hero Section -->
+  <@section
+    id="hero"
+    type="hero"
+    settings={{
+      "backgroundImage": "assets/images/hero-bg.jpg",
+      "title": "Welcome to Our Store",
+      "subtitle": "Discover amazing products at unbeatable prices. Shop the latest trends and timeless classics.",
+      "buttonText": "Shop Now",
+      "buttonUrl": "/collections/all",
+      "overlayOpacity": 40,
+      "textColor": "#ffffff",
+      "textAlign": "center",
+      "minHeight": 80
+    }}
+  />
+
+  <!-- Featured Products -->
+  <@section
+    id="featured-products"
+    type="featured-products"
+    settings={{
+      "title": "Featured Products",
+      "subtitle": "Check out our best sellers and new arrivals",
+      "collection": "featured",
+      "products_count": 8,
+      "columns_desktop": 4,
+      "columns_mobile": 2,
+      "show_price": true,
+      "show_compare_price": true,
+      "show_vendor": false,
+      "show_add_to_cart": true,
+      "image_ratio": "square",
+      "background_color": "#ffffff",
+      "text_color": "#1a1a1a",
+      "view_all_url": "/collections/all",
+      "view_all_text": "View All Products"
+    }}
+  />
+
+  <!-- Image with Text -->
+  <@section
+    id="image-with-text"
+    type="image-with-text"
+    settings={{
+      "image": "assets/images/about-us.jpg",
+      "title": "About Our Brand",
+      "text": "We are passionate about bringing you the finest products. Our commitment to quality and customer satisfaction has made us a trusted name in the industry.",
+      "buttonText": "Learn More",
+      "buttonUrl": "/pages/about",
+      "imagePosition": "left",
+      "backgroundColor": "#f8f9fa"
+    }}
+  />
+
+  <!-- Collection List -->
+  <@section
+    id="collection-list"
+    type="collection-list"
+    settings={{
+      "title": "Shop by Category",
+      "subtitle": "Browse our curated collections",
+      "columns": 3,
+      "showDescription": false
+    }}
+    blocks={{
+      "collection-1": {
+        "type": "collection",
+        "settings": {
+          "collection": "new-arrivals",
+          "title": "New Arrivals",
+          "image": "assets/images/collection-new.jpg"
+        }
+      },
+      "collection-2": {
+        "type": "collection",
+        "settings": {
+          "collection": "best-sellers",
+          "title": "Best Sellers",
+          "image": "assets/images/collection-best.jpg"
+        }
+      },
+      "collection-3": {
+        "type": "collection",
+        "settings": {
+          "collection": "sale",
+          "title": "On Sale",
+          "image": "assets/images/collection-sale.jpg"
+        }
+      }
+    }}
+  />
+
+  <!-- Testimonials -->
+  <@section
+    id="testimonials"
+    type="testimonials"
+    settings={{
+      "title": "What Our Customers Say",
+      "subtitle": "Real reviews from real customers",
+      "backgroundColor": "#ffffff",
+      "autoplay": true,
+      "autoplaySpeed": 5000
+    }}
+    blocks={{
+      "testimonial-1": {
+        "type": "testimonial",
+        "settings": {
+          "quote": "Amazing quality and fast shipping! I'm a repeat customer and have never been disappointed.",
+          "author": "Sarah M.",
+          "rating": 5
+        }
+      },
+      "testimonial-2": {
+        "type": "testimonial",
+        "settings": {
+          "quote": "The best online shopping experience I've had. Great products and excellent customer service.",
+          "author": "John D.",
+          "rating": 5
+        }
+      },
+      "testimonial-3": {
+        "type": "testimonial",
+        "settings": {
+          "quote": "Love the variety of products available. Always find what I'm looking for at great prices.",
+          "author": "Emily R.",
+          "rating": 5
+        }
+      }
+    }}
+  />
+
+  <!-- Newsletter Signup -->
+  <@section
+    id="newsletter"
+    type="newsletter"
+    settings={{
+      "title": "Subscribe to Our Newsletter",
+      "subtitle": "Get the latest updates, deals, and exclusive offers delivered to your inbox.",
+      "placeholder": "Enter your email address",
+      "buttonText": "Subscribe",
+      "successMessage": "Thank you for subscribing!",
+      "backgroundColor": "#f8f9fa",
+      "textColor": "#1a1a1a",
+      "buttonColor": "#1a1a1a",
+      "buttonTextColor": "#ffffff",
+      "showPrivacyNote": true,
+      "privacyNote": "We respect your privacy. Unsubscribe at any time."
+    }}
+  />
+
+  <!-- Dynamic Sections (added by user in Theme Editor) -->
+  <@sections />
+
+</div>
+
+<style>
+.template-index {
+  /* Template-specific styles */
+}
+</style>

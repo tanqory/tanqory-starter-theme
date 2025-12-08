@@ -1,0 +1,353 @@
+<@schema>
+{
+  "name": "Testimonials",
+  "category": "content",
+  "description": "Customer reviews and testimonials carousel",
+  "icon": "quote",
+  "settings": [
+    {
+      "id": "heading",
+      "type": "text",
+      "label": "Heading",
+      "default": "What Our Customers Say"
+    },
+    {
+      "id": "subheading",
+      "type": "text",
+      "label": "Subheading",
+      "default": "Real reviews from real customers"
+    },
+    {
+      "id": "backgroundColor",
+      "type": "color",
+      "label": "Background Color",
+      "default": "#f8f9fa"
+    },
+    {
+      "id": "textColor",
+      "type": "color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "id": "accentColor",
+      "type": "color",
+      "label": "Accent Color",
+      "default": "#fbbf24"
+    },
+    {
+      "id": "layout",
+      "type": "select",
+      "label": "Layout",
+      "options": [
+        { "value": "grid", "label": "Grid" },
+        { "value": "carousel", "label": "Carousel" },
+        { "value": "masonry", "label": "Masonry" }
+      ],
+      "default": "grid"
+    },
+    {
+      "id": "columns",
+      "type": "range",
+      "label": "Columns",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "id": "showRating",
+      "type": "checkbox",
+      "label": "Show Rating Stars",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "id": "content",
+          "type": "richtext",
+          "label": "Review Content",
+          "default": "This product exceeded my expectations. Great quality and fast shipping!"
+        },
+        {
+          "id": "author",
+          "type": "text",
+          "label": "Author Name",
+          "default": "John Doe"
+        },
+        {
+          "id": "authorTitle",
+          "type": "text",
+          "label": "Author Title",
+          "default": "Verified Buyer"
+        },
+        {
+          "id": "avatar",
+          "type": "image_picker",
+          "label": "Author Avatar",
+          "default": ""
+        },
+        {
+          "id": "rating",
+          "type": "range",
+          "label": "Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default Testimonials",
+      "category": "content",
+      "blocks": [
+        {
+          "type": "testimonial",
+          "settings": {
+            "content": "Amazing quality and fast delivery. Will definitely order again!",
+            "author": "Sarah M.",
+            "authorTitle": "Verified Buyer",
+            "rating": 5
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "content": "Best purchase I've made this year. The customer service was exceptional.",
+            "author": "Michael R.",
+            "authorTitle": "Loyal Customer",
+            "rating": 5
+          }
+        },
+        {
+          "type": "testimonial",
+          "settings": {
+            "content": "High-quality products at reasonable prices. Highly recommend!",
+            "author": "Emily T.",
+            "authorTitle": "First-time Buyer",
+            "rating": 4
+          }
+        }
+      ]
+    }
+  ]
+}
+</@schema>
+
+<section
+  class="testimonials-section"
+  style="
+    background-color: ${section.settings.backgroundColor};
+    color: ${section.settings.textColor};
+  "
+  data-section-id="${section.id}"
+  data-section-type="testimonials"
+  data-layout="${section.settings.layout}"
+>
+  <div class="testimonials-container">
+    <@if condition="section.settings.heading || section.settings.subheading">
+      <div class="testimonials-header">
+        <@if condition="section.settings.subheading">
+          <span class="testimonials-subheading">${section.settings.subheading}</span>
+        </@if>
+        <@if condition="section.settings.heading">
+          <h2 class="testimonials-heading">${section.settings.heading}</h2>
+        </@if>
+      </div>
+    </@if>
+
+    <div class="testimonials-grid columns-${section.settings.columns}">
+      <@for each="section.blocks" as="block">
+        <@if condition="block.type === 'testimonial'">
+          <div class="testimonial-card">
+            <@if condition="section.settings.showRating">
+              <div class="testimonial-rating" style="color: ${section.settings.accentColor};">
+                <@for each="range(1, block.settings.rating)" as="star">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </@for>
+                <@for each="range(block.settings.rating + 1, 5)" as="emptyStar">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                  </svg>
+                </@for>
+              </div>
+            </@if>
+
+            <div class="testimonial-content">
+              <svg class="testimonial-quote" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" opacity="0.1">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-10zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+              </svg>
+              ${block.settings.content}
+            </div>
+
+            <div class="testimonial-author">
+              <@if condition="block.settings.avatar">
+                <img
+                  src="${block.settings.avatar | asset_url}"
+                  alt="${block.settings.author}"
+                  class="testimonial-avatar"
+                />
+              </@if>
+              <@else>
+                <div class="testimonial-avatar-placeholder">
+                  ${block.settings.author | slice: 0, 1 | upcase}
+                </div>
+              </@else>
+              <div class="testimonial-author-info">
+                <span class="testimonial-author-name">${block.settings.author}</span>
+                <@if condition="block.settings.authorTitle">
+                  <span class="testimonial-author-title">${block.settings.authorTitle}</span>
+                </@if>
+              </div>
+            </div>
+          </div>
+        </@if>
+      </@for>
+    </div>
+  </div>
+</section>
+
+<style>
+.testimonials-section {
+  padding: 5rem 2rem;
+}
+
+.testimonials-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.testimonials-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.testimonials-subheading {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  margin-bottom: 0.5rem;
+}
+
+.testimonials-heading {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  margin: 0;
+}
+
+.testimonials-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.columns-1 { grid-template-columns: 1fr; }
+.columns-2 { grid-template-columns: repeat(2, 1fr); }
+.columns-3 { grid-template-columns: repeat(3, 1fr); }
+.columns-4 { grid-template-columns: repeat(4, 1fr); }
+
+.testimonial-card {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial-rating {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.testimonial-content {
+  position: relative;
+  font-size: 1rem;
+  line-height: 1.7;
+  flex: 1;
+}
+
+.testimonial-quote {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.testimonial-avatar,
+.testimonial-avatar-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.testimonial-avatar-placeholder {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.testimonial-author-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.testimonial-author-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.testimonial-author-title {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+@media (max-width: 1024px) {
+  .columns-4 { grid-template-columns: repeat(2, 1fr); }
+  .columns-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .testimonials-section {
+    padding: 3rem 1rem;
+  }
+
+  .testimonials-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .testimonial-card {
+    padding: 1.5rem;
+  }
+}
+</style>

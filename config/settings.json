@@ -1,0 +1,315 @@
+{
+  "name": "tanqory-starter-theme",
+  "displayName": "Tanqory Starter Theme",
+  "version": "1.0.0",
+  "description": "A clean, modern starter theme for Tanqory stores",
+  "author": "Tanqory Team",
+  "category": "GENERAL",
+
+  "settings_schema": [
+    {
+      "name": "Colors",
+      "settings": [
+        {
+          "id": "colorPrimary",
+          "type": "color",
+          "label": "Primary Color",
+          "default": "#1a1a1a",
+          "info": "Used for buttons, links, and accents"
+        },
+        {
+          "id": "colorSecondary",
+          "type": "color",
+          "label": "Secondary Color",
+          "default": "#6b7280",
+          "info": "Used for secondary text and borders"
+        },
+        {
+          "id": "colorAccent",
+          "type": "color",
+          "label": "Accent Color",
+          "default": "#3b82f6",
+          "info": "Used for highlights and CTAs"
+        },
+        {
+          "id": "colorBackground",
+          "type": "color",
+          "label": "Background Color",
+          "default": "#ffffff"
+        },
+        {
+          "id": "colorText",
+          "type": "color",
+          "label": "Text Color",
+          "default": "#1a1a1a"
+        },
+        {
+          "id": "colorBorder",
+          "type": "color",
+          "label": "Border Color",
+          "default": "#e5e7eb"
+        }
+      ]
+    },
+    {
+      "name": "Typography",
+      "settings": [
+        {
+          "id": "fontHeading",
+          "type": "font_picker",
+          "label": "Heading Font",
+          "default": "Inter"
+        },
+        {
+          "id": "fontBody",
+          "type": "font_picker",
+          "label": "Body Font",
+          "default": "Inter"
+        },
+        {
+          "id": "baseFontSize",
+          "type": "range",
+          "label": "Base Font Size (px)",
+          "min": 14,
+          "max": 20,
+          "step": 1,
+          "default": 16
+        }
+      ]
+    },
+    {
+      "name": "Layout",
+      "settings": [
+        {
+          "id": "maxWidth",
+          "type": "range",
+          "label": "Max Content Width (px)",
+          "min": 1000,
+          "max": 1600,
+          "step": 100,
+          "default": 1400
+        },
+        {
+          "id": "borderRadius",
+          "type": "range",
+          "label": "Border Radius (px)",
+          "min": 0,
+          "max": 16,
+          "step": 2,
+          "default": 4
+        },
+        {
+          "id": "spacingUnit",
+          "type": "range",
+          "label": "Spacing Unit (rem)",
+          "min": 0.5,
+          "max": 2,
+          "step": 0.25,
+          "default": 1
+        }
+      ]
+    },
+    {
+      "name": "Header",
+      "settings": [
+        {
+          "id": "logo",
+          "type": "image_picker",
+          "label": "Logo"
+        },
+        {
+          "id": "logoHeight",
+          "type": "range",
+          "label": "Logo Height (px)",
+          "min": 20,
+          "max": 80,
+          "step": 5,
+          "default": 40
+        },
+        {
+          "id": "stickyHeader",
+          "type": "checkbox",
+          "label": "Sticky Header",
+          "default": true
+        },
+        {
+          "id": "showSearchInHeader",
+          "type": "checkbox",
+          "label": "Show Search Icon",
+          "default": true
+        }
+      ]
+    },
+    {
+      "name": "Announcement Bar",
+      "settings": [
+        {
+          "id": "showAnnouncement",
+          "type": "checkbox",
+          "label": "Show Announcement Bar",
+          "default": false
+        },
+        {
+          "id": "announcementText",
+          "type": "text",
+          "label": "Announcement Text",
+          "default": "Free shipping on orders over $50!"
+        },
+        {
+          "id": "announcementBg",
+          "type": "color",
+          "label": "Background Color",
+          "default": "#1a1a1a"
+        },
+        {
+          "id": "announcementColor",
+          "type": "color",
+          "label": "Text Color",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "settings": [
+        {
+          "id": "showVendor",
+          "type": "checkbox",
+          "label": "Show Vendor Name",
+          "default": true
+        },
+        {
+          "id": "showSaleBadge",
+          "type": "checkbox",
+          "label": "Show Sale Badge",
+          "default": true
+        },
+        {
+          "id": "showSoldOutBadge",
+          "type": "checkbox",
+          "label": "Show Sold Out Badge",
+          "default": true
+        },
+        {
+          "id": "productImageRatio",
+          "type": "select",
+          "label": "Product Image Ratio",
+          "options": [
+            { "value": "square", "label": "Square (1:1)" },
+            { "value": "portrait", "label": "Portrait (3:4)" },
+            { "value": "landscape", "label": "Landscape (4:3)" }
+          ],
+          "default": "square"
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "settings": [
+        {
+          "id": "cartType",
+          "type": "select",
+          "label": "Cart Type",
+          "options": [
+            { "value": "drawer", "label": "Drawer" },
+            { "value": "page", "label": "Page" },
+            { "value": "popup", "label": "Popup" }
+          ],
+          "default": "drawer"
+        },
+        {
+          "id": "showCartNotes",
+          "type": "checkbox",
+          "label": "Show Cart Notes",
+          "default": false
+        }
+      ]
+    },
+    {
+      "name": "Footer",
+      "settings": [
+        {
+          "id": "footerBg",
+          "type": "color",
+          "label": "Footer Background",
+          "default": "#1a1a1a"
+        },
+        {
+          "id": "footerText",
+          "type": "color",
+          "label": "Footer Text Color",
+          "default": "#ffffff"
+        },
+        {
+          "id": "showPaymentIcons",
+          "type": "checkbox",
+          "label": "Show Payment Icons",
+          "default": true
+        }
+      ]
+    },
+    {
+      "name": "Social Media",
+      "settings": [
+        {
+          "id": "socialFacebook",
+          "type": "url",
+          "label": "Facebook URL"
+        },
+        {
+          "id": "socialInstagram",
+          "type": "url",
+          "label": "Instagram URL"
+        },
+        {
+          "id": "socialTwitter",
+          "type": "url",
+          "label": "Twitter URL"
+        },
+        {
+          "id": "socialYoutube",
+          "type": "url",
+          "label": "YouTube URL"
+        },
+        {
+          "id": "socialTiktok",
+          "type": "url",
+          "label": "TikTok URL"
+        }
+      ]
+    }
+  ],
+
+  "presets": {
+    "default": {
+      "colorPrimary": "#1a1a1a",
+      "colorAccent": "#3b82f6",
+      "fontHeading": "Inter",
+      "fontBody": "Inter"
+    },
+    "modern": {
+      "colorPrimary": "#0f172a",
+      "colorAccent": "#6366f1",
+      "borderRadius": 8
+    },
+    "minimal": {
+      "colorPrimary": "#000000",
+      "colorAccent": "#000000",
+      "borderRadius": 0
+    }
+  },
+
+  "features": [
+    "Responsive Design",
+    "Dark Mode Ready",
+    "Multi-language Support",
+    "RTL Support",
+    "SEO Optimized",
+    "Performance Optimized",
+    "Accessibility (WCAG 2.1 AA)"
+  ],
+
+  "requirements": {
+    "minTanqoryVersion": "1.0.0"
+  }
+}

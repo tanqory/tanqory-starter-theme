@@ -1,0 +1,88 @@
+<!--
+  Customer Login Template (customers/login.tanq)
+
+  Elementor/React-style template with inline settings
+  This template is rendered inside Layout's ${content_for_layout}
+
+  Data available:
+  - shop: Store information
+  - form: Form state (errors, return_to)
+  - template: Template info and settings
+
+  Template Type: customers/login
+  Layout: default
+-->
+
+<@schema>
+{
+  "name": "Customer Login",
+  "type": "customers/login",
+  "description": "Customer login page",
+  "layout": "default"
+}
+</@schema>
+
+<!-- Template Content -->
+<div class="template-customers-login">
+
+  <!-- Login Form Section -->
+  <@section
+    id="login-form"
+    type="login-form"
+    settings={{
+      "title": "Welcome Back",
+      "subtitle": "Sign in to your account",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "showForgotPassword": true,
+      "forgotPasswordText": "Forgot password?",
+      "submitButtonText": "Sign In",
+      "showCreateAccount": true,
+      "createAccountText": "Create an Account",
+      "showGuestCheckout": true,
+      "guestCheckoutText": "Continue as Guest",
+      "showSocialLogin": false,
+      "cardMaxWidth": 400,
+      "backgroundColor": "#ffffff",
+      "textColor": "#1a1a1a",
+      "accentColor": "#2563eb",
+      "paddingTop": 80,
+      "paddingBottom": 80
+    }}
+  />
+
+  <!-- Featured Products -->
+  <@section
+    id="featured-products"
+    type="featured-products"
+    settings={{
+      "title": "While You're Here",
+      "subtitle": "Check out our latest products",
+      "collection": "new-arrivals",
+      "products_count": 4,
+      "columns_desktop": 4,
+      "columns_mobile": 2,
+      "show_price": true,
+      "show_compare_price": true,
+      "show_vendor": false,
+      "show_add_to_cart": false,
+      "image_ratio": "square",
+      "background_color": "#f9fafb",
+      "text_color": "#1a1a1a",
+      "view_all_url": "",
+      "view_all_text": ""
+    }}
+  />
+
+  <!-- Dynamic Sections -->
+  <@sections />
+
+</div>
+
+<style>
+.template-customers-login {
+  min-height: 60vh;
+}
+</style>

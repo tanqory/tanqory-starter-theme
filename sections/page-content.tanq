@@ -1,0 +1,261 @@
+<@schema>
+{
+  "name": "Page Content",
+  "category": "content",
+  "description": "Display page title and content from the current page. Designed for Page templates.",
+  "icon": "file-text",
+  "settings": [
+    {
+      "id": "showTitle",
+      "type": "checkbox",
+      "label": "Show Page Title",
+      "default": true
+    },
+    {
+      "id": "textAlign",
+      "type": "select",
+      "label": "Text Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    {
+      "id": "contentWidth",
+      "type": "select",
+      "label": "Content Width",
+      "options": [
+        { "value": "narrow", "label": "Narrow (600px)" },
+        { "value": "medium", "label": "Medium (800px)" },
+        { "value": "wide", "label": "Wide (1000px)" },
+        { "value": "full", "label": "Full Width" }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "backgroundColor",
+      "type": "color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "id": "textColor",
+      "type": "color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "id": "titleSize",
+      "type": "select",
+      "label": "Title Size",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "large"
+    },
+    {
+      "id": "paddingTop",
+      "type": "range",
+      "label": "Padding Top (px)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 60
+    },
+    {
+      "id": "paddingBottom",
+      "type": "range",
+      "label": "Padding Bottom (px)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 60
+    }
+  ],
+  "templates": ["page"],
+  "presets": [
+    {
+      "name": "Default Page Content",
+      "category": "content"
+    }
+  ]
+}
+</@schema>
+
+<section
+  class="page-content-section"
+  style="
+    background-color: ${section.settings.backgroundColor};
+    color: ${section.settings.textColor};
+    padding-top: ${section.settings.paddingTop}px;
+    padding-bottom: ${section.settings.paddingBottom}px;
+  "
+  data-section-id="${section.id}"
+  data-section-type="page-content"
+>
+  <div class="page-content-container container-${section.settings.contentWidth}" style="text-align: ${section.settings.textAlign};">
+    <@if condition="page">
+      <@if condition="section.settings.showTitle">
+        <@if condition="page.title">
+          <h1 class="page-title title-${section.settings.titleSize}">
+            ${page.title}
+          </h1>
+        </@if>
+      </@if>
+
+      <@if condition="page.content">
+        <div class="page-body">
+          ${page.content}
+        </div>
+      <@else>
+        <div class="page-body page-body--empty">
+          <p>This page has no content yet.</p>
+        </div>
+      </@if>
+    <@else>
+      <div class="page-body page-body--placeholder">
+        <div class="placeholder-icon">📄</div>
+        <h2 class="placeholder-title">Page Content</h2>
+        <p class="placeholder-text">Select a page from the "Preview" dropdown above to see its content here.</p>
+      </div>
+    </@if>
+  </div>
+</section>
+
+<style>
+.page-content-section {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.page-content-container {
+  margin: 0 auto;
+}
+
+.container-narrow { max-width: 600px; }
+.container-medium { max-width: 800px; }
+.container-wide { max-width: 1000px; }
+.container-full { max-width: 100%; }
+
+.page-title {
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 2rem 0;
+}
+
+.title-small { font-size: clamp(1.5rem, 3vw, 2rem); }
+.title-medium { font-size: clamp(2rem, 4vw, 2.5rem); }
+.title-large { font-size: clamp(2.5rem, 5vw, 3.5rem); }
+
+.page-body {
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
+
+.page-body p {
+  margin: 0 0 1.5rem 0;
+}
+
+.page-body p:last-child {
+  margin-bottom: 0;
+}
+
+.page-body a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.page-body a:hover {
+  opacity: 0.8;
+}
+
+.page-body h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 2rem 0 1rem 0;
+}
+
+.page-body h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.5rem 0 0.75rem 0;
+}
+
+.page-body h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.5rem 0;
+}
+
+.page-body ul,
+.page-body ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.page-body li {
+  margin-bottom: 0.5rem;
+}
+
+.page-body blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  border-left: 4px solid currentColor;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+.page-body img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin: 1.5rem 0;
+}
+
+.page-body--empty {
+  color: #999;
+  font-style: italic;
+}
+
+.page-body--placeholder {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: #f8f9fa;
+  border: 2px dashed #e0e0e0;
+  border-radius: 8px;
+}
+
+.placeholder-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.placeholder-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+.placeholder-text {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .page-content-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .page-body {
+    font-size: 1rem;
+  }
+}
+</style>

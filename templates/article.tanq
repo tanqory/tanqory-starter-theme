@@ -1,0 +1,141 @@
+<!--
+  Article Template (article.tanq)
+
+  Elementor/React-style template with inline settings
+  This template is rendered inside Layout's ${content_for_layout}
+
+  Data available:
+  - shop: Store information
+  - blog: Parent blog data
+  - article: Current article data
+  - relatedArticles: Related articles
+  - template: Template info and settings
+
+  Template Type: article
+  Layout: default
+-->
+
+<@schema>
+{
+  "name": "Article",
+  "type": "article",
+  "description": "Single blog article page",
+  "layout": "default"
+}
+</@schema>
+
+<!-- Template Content -->
+<article class="template-article">
+
+  <!-- Article Header (Featured image + Title + Meta) -->
+  <@section
+    id="article-header"
+    type="article-header"
+    settings={{
+      "showBreadcrumb": true,
+      "showFeaturedImage": true,
+      "imagePosition": "full-width",
+      "showDate": true,
+      "showAuthor": true,
+      "showReadTime": true,
+      "showTags": true,
+      "textAlign": "center",
+      "overlayOpacity": 40,
+      "backgroundColor": "#ffffff",
+      "textColor": "#1a1a1a",
+      "paddingTop": 40,
+      "paddingBottom": 40
+    }}
+  />
+
+  <!-- Article Content (Rich text body) -->
+  <@section
+    id="article-content"
+    type="article-content"
+    settings={{
+      "contentWidth": "narrow",
+      "showShareButtons": true,
+      "sharePosition": "left-sticky",
+      "showAuthorBio": true,
+      "showNextPrev": true,
+      "backgroundColor": "#ffffff",
+      "textColor": "#1a1a1a",
+      "linkColor": "#2563eb",
+      "paddingTop": 40,
+      "paddingBottom": 60
+    }}
+  />
+
+  <!-- Share Buttons -->
+  <@section
+    id="article-share"
+    type="article-share"
+    settings={{
+      "title": "Share this article",
+      "showFacebook": true,
+      "showTwitter": true,
+      "showLinkedIn": true,
+      "showPinterest": true,
+      "showCopyLink": true,
+      "showEmail": true,
+      "backgroundColor": "#f9fafb",
+      "paddingTop": 40,
+      "paddingBottom": 40
+    }}
+  />
+
+  <!-- Comments Section -->
+  <@section
+    id="article-comments"
+    type="article-comments"
+    settings={{
+      "enableComments": true,
+      "showCommentCount": true,
+      "moderateComments": true,
+      "requireEmail": true,
+      "requireName": true,
+      "allowReplies": true,
+      "maxRepliesDepth": 2,
+      "commentsPerPage": 10,
+      "sortOrder": "newest",
+      "backgroundColor": "#ffffff",
+      "textColor": "#1a1a1a",
+      "accentColor": "#2563eb",
+      "paddingTop": 60,
+      "paddingBottom": 60
+    }}
+  />
+
+  <!-- Related Articles -->
+  <@section
+    id="related-articles"
+    type="related-articles"
+    settings={{
+      "title": "Related Articles",
+      "subtitle": "You might also like",
+      "articlesToShow": 3,
+      "columns": 3,
+      "showFeaturedImage": true,
+      "imageRatio": "landscape",
+      "showDate": true,
+      "showAuthor": false,
+      "showExcerpt": true,
+      "excerptLength": 100,
+      "backgroundColor": "#f9fafb",
+      "textColor": "#1a1a1a",
+      "accentColor": "#2563eb",
+      "paddingTop": 60,
+      "paddingBottom": 60
+    }}
+  />
+
+  <!-- Dynamic Sections (added by user in Theme Editor) -->
+  <@sections />
+
+</article>
+
+<style>
+.template-article {
+  min-height: 60vh;
+}
+</style>

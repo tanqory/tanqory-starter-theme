@@ -1,0 +1,111 @@
+<!--
+  Collection Template (collection.tanq)
+
+  Elementor/React-style template with inline settings
+  This template is rendered inside Layout's ${content_for_layout}
+
+  Data available:
+  - shop: Store information
+  - collection: Current collection object
+  - pagination: Pagination info
+  - sort: Current sort option
+  - filters: Active filters
+  - template: Template info and settings
+
+  Template Type: collection
+  Layout: default
+-->
+
+<@schema>
+{
+  "name": "Collection",
+  "type": "collection",
+  "description": "Collection/Category page template",
+  "layout": "default"
+}
+</@schema>
+
+<!-- Template Content -->
+<div class="template-collection">
+
+  <!-- Collection Banner (Hero with title/description) -->
+  <@section
+    id="collection-banner"
+    type="collection-banner"
+    settings={{
+      "showImage": true,
+      "showDescription": true,
+      "showProductCount": true,
+      "textAlign": "center",
+      "overlayOpacity": 40,
+      "minHeight": 300,
+      "backgroundColor": "#1a1a1a",
+      "textColor": "#ffffff",
+      "paddingTop": 60,
+      "paddingBottom": 60
+    }}
+  />
+
+  <!-- Products Grid with Filters -->
+  <@section
+    id="collection-products"
+    type="collection-products"
+    settings={{
+      "showFilters": true,
+      "filterPosition": "sidebar",
+      "showSort": true,
+      "showViewToggle": true,
+      "defaultView": "grid",
+      "productsPerPage": 12,
+      "columnsDesktop": 4,
+      "columnsMobile": 2,
+      "imageRatio": "square",
+      "showSecondImage": true,
+      "showVendor": false,
+      "showPrice": true,
+      "showComparePrice": true,
+      "showRating": false,
+      "showQuickAdd": true,
+      "showSaleBadge": true,
+      "showSoldOutBadge": true,
+      "enableInfiniteScroll": false,
+      "backgroundColor": "#ffffff",
+      "textColor": "#1a1a1a",
+      "accentColor": "#2563eb",
+      "paddingTop": 40,
+      "paddingBottom": 60
+    }}
+  />
+
+  <!-- Featured Products from this Collection -->
+  <@section
+    id="featured-from-collection"
+    type="featured-products"
+    settings={{
+      "title": "Best Sellers in This Collection",
+      "subtitle": "Our most popular picks",
+      "products_count": 4,
+      "columns_desktop": 4,
+      "columns_mobile": 2,
+      "show_price": true,
+      "show_compare_price": true,
+      "show_vendor": false,
+      "show_add_to_cart": true,
+      "image_ratio": "square",
+      "background_color": "#f9fafb",
+      "text_color": "#1a1a1a",
+      "view_all_url": "",
+      "view_all_text": ""
+    }}
+  />
+
+  <!-- Dynamic Sections (added by user in Theme Editor) -->
+  <@sections />
+
+</div>
+
+<style>
+.template-collection {
+  min-height: 60vh;
+}
+</style>

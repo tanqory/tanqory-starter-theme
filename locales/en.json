@@ -1,0 +1,156 @@
+{
+  "general": {
+    "skip_to_content": "Skip to content",
+    "loading": "Loading...",
+    "search": "Search",
+    "close": "Close",
+    "menu": "Menu",
+    "share": "Share",
+    "copy_link": "Copy link",
+    "link_copied": "Link copied!",
+    "previous": "Previous",
+    "next": "Next",
+    "view_all": "View all"
+  },
+
+  "header": {
+    "search_placeholder": "Search products...",
+    "account": "Account",
+    "cart": "Cart",
+    "menu": "Menu"
+  },
+
+  "products": {
+    "add_to_cart": "Add to Cart",
+    "sold_out": "Sold Out",
+    "unavailable": "Unavailable",
+    "quantity": "Quantity",
+    "decrease_quantity": "Decrease quantity",
+    "increase_quantity": "Increase quantity",
+    "sale": "Sale",
+    "new": "New",
+    "from_price": "From {{ price }}",
+    "regular_price": "Regular price",
+    "sale_price": "Sale price",
+    "unit_price": "Unit price",
+    "per": "per",
+    "sku": "SKU",
+    "vendor": "Vendor",
+    "type": "Type",
+    "availability": "Availability",
+    "in_stock": "In stock",
+    "out_of_stock": "Out of stock",
+    "low_stock": "Low stock",
+    "only_x_left": "Only {{ count }} left"
+  },
+
+  "product": {
+    "description": "Description",
+    "details": "Details",
+    "reviews": "Reviews",
+    "shipping": "Shipping & Returns",
+    "share_on_facebook": "Share on Facebook",
+    "share_on_twitter": "Share on Twitter",
+    "share_on_pinterest": "Pin on Pinterest",
+    "you_may_also_like": "You May Also Like",
+    "recently_viewed": "Recently Viewed"
+  },
+
+  "collections": {
+    "title": "Collections",
+    "all": "All Products",
+    "empty": "No products found",
+    "filter": "Filter",
+    "sort": "Sort",
+    "clear_all": "Clear all",
+    "apply": "Apply",
+    "products_count": {
+      "one": "{{ count }} product",
+      "other": "{{ count }} products"
+    }
+  },
+
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty",
+    "continue_shopping": "Continue Shopping",
+    "subtotal": "Subtotal",
+    "shipping_at_checkout": "Shipping calculated at checkout",
+    "taxes_included": "Taxes included",
+    "checkout": "Checkout",
+    "view_cart": "View Cart",
+    "remove": "Remove",
+    "update": "Update",
+    "note": "Add a note to your order",
+    "note_placeholder": "Special instructions for your order"
+  },
+
+  "customer": {
+    "account": "Account",
+    "login": "Log in",
+    "logout": "Log out",
+    "register": "Create account",
+    "email": "Email",
+    "password": "Password",
+    "forgot_password": "Forgot password?",
+    "reset_password": "Reset password",
+    "first_name": "First name",
+    "last_name": "Last name",
+    "orders": "Order history",
+    "addresses": "Addresses",
+    "no_orders": "You haven't placed any orders yet"
+  },
+
+  "newsletter": {
+    "title": "Subscribe to our newsletter",
+    "subtitle": "Get the latest updates and exclusive offers",
+    "email_placeholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "success": "Thank you for subscribing!",
+    "error": "Something went wrong. Please try again."
+  },
+
+  "footer": {
+    "quick_links": "Quick Links",
+    "customer_service": "Customer Service",
+    "about_us": "About Us",
+    "contact": "Contact",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service",
+    "shipping_policy": "Shipping Policy",
+    "refund_policy": "Refund Policy",
+    "copyright": "All rights reserved"
+  },
+
+  "accessibility": {
+    "skip_to_content": "Skip to content",
+    "close_menu": "Close menu",
+    "open_menu": "Open menu",
+    "loading": "Loading",
+    "image": "Image",
+    "play": "Play",
+    "pause": "Pause",
+    "expand": "Expand",
+    "collapse": "Collapse"
+  },
+
+  "errors": {
+    "general": "Something went wrong. Please try again.",
+    "cart_add_error": "Could not add item to cart",
+    "cart_update_error": "Could not update cart",
+    "form_error": "Please check the form for errors",
+    "required": "This field is required",
+    "email_invalid": "Please enter a valid email address"
+  },
+
+  "date": {
+    "formats": {
+      "short": "MMM D, YYYY",
+      "long": "MMMM D, YYYY"
+    }
+  },
+
+  "currency": {
+    "format": "{{ amount }}"
+  }
+}

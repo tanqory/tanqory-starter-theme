@@ -1,0 +1,1251 @@
+<!--
+  Collection Products Section
+
+  Main product grid for collection pages with filtering and sorting
+  Designed to be modular and customizable
+
+  Data available:
+  - collection: Current collection object with products
+  - pagination: Pagination info
+  - section.settings: Section settings
+-->
+
+<@schema>
+{
+  "name": "Collection Products",
+  "tag": "section",
+  "class": "collection-products-section",
+  "description": "Product grid with filtering and sorting for collection pages",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "id": "productsPerRow",
+      "type": "range",
+      "label": "Products per Row",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "id": "productsPerPage",
+      "type": "range",
+      "label": "Products per Page",
+      "min": 8,
+      "max": 48,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "id": "imageRatio",
+      "type": "select",
+      "label": "Product Image Ratio",
+      "options": [
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (3:4)" },
+        { "value": "landscape", "label": "Landscape (4:3)" }
+      ],
+      "default": "square"
+    },
+    {
+      "type": "header",
+      "content": "Toolbar"
+    },
+    {
+      "id": "showProductCount",
+      "type": "checkbox",
+      "label": "Show Product Count",
+      "default": true
+    },
+    {
+      "id": "showSort",
+      "type": "checkbox",
+      "label": "Show Sort",
+      "default": true
+    },
+    {
+      "id": "showLayoutToggle",
+      "type": "checkbox",
+      "label": "Show Layout Toggle",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Sidebar Filters"
+    },
+    {
+      "id": "showFilters",
+      "type": "checkbox",
+      "label": "Show Sidebar Filters",
+      "default": true
+    },
+    {
+      "id": "filterPosition",
+      "type": "select",
+      "label": "Filter Position",
+      "options": [
+        { "value": "left", "label": "Left Sidebar" },
+        { "value": "right", "label": "Right Sidebar" },
+        { "value": "drawer", "label": "Drawer (Mobile-style)" }
+      ],
+      "default": "left"
+    },
+    {
+      "id": "collapsedFilters",
+      "type": "checkbox",
+      "label": "Collapsed Filter Groups",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Product Card"
+    },
+    {
+      "id": "showSecondImage",
+      "type": "checkbox",
+      "label": "Show Second Image on Hover",
+      "default": true
+    },
+    {
+      "id": "showVendor",
+      "type": "checkbox",
+      "label": "Show Vendor",
+      "default": false
+    },
+    {
+      "id": "showQuickAdd",
+      "type": "checkbox",
+      "label": "Show Quick Add Button",
+      "default": true
+    },
+    {
+      "id": "showRating",
+      "type": "checkbox",
+      "label": "Show Rating",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Empty State"
+    },
+    {
+      "id": "emptyTitle",
+      "type": "text",
+      "label": "Empty State Title",
+      "default": "No products found"
+    },
+    {
+      "id": "emptyText",
+      "type": "textarea",
+      "label": "Empty State Text",
+      "default": "Try adjusting your filters or browse our other collections."
+    },
+    {
+      "id": "emptyButtonText",
+      "type": "text",
+      "label": "Empty State Button",
+      "default": "View All Products"
+    },
+    {
+      "id": "emptyButtonUrl",
+      "type": "url",
+      "label": "Empty State Button URL",
+      "default": "/collections/all"
+    },
+    {
+      "type": "header",
+      "content": "Styling"
+    },
+    {
+      "id": "backgroundColor",
+      "type": "color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "id": "textColor",
+      "type": "color",
+      "label": "Text Color",
+      "default": "#1a1a1a"
+    },
+    {
+      "id": "accentColor",
+      "type": "color",
+      "label": "Accent Color",
+      "default": "#2563eb"
+    },
+    {
+      "id": "paddingTop",
+      "type": "range",
+      "label": "Padding Top (px)",
+      "min": 0,
+      "max": 80,
+      "step": 10,
+      "default": 0
+    },
+    {
+      "id": "paddingBottom",
+      "type": "range",
+      "label": "Padding Bottom (px)",
+      "min": 0,
+      "max": 80,
+      "step": 10,
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Products",
+      "category": "Collection"
+    }
+  ]
+}
+</@schema>
+
+<section
+  class="collection-products-section filter-${section.settings.filterPosition}"
+  style="
+    background-color: ${section.settings.backgroundColor};
+    color: ${section.settings.textColor};
+    padding-top: ${section.settings.paddingTop}px;
+    padding-bottom: ${section.settings.paddingBottom}px;
+    --accent-color: ${section.settings.accentColor};
+  "
+  data-section-id="${section.id}"
+  data-section-type="collection-products"
+>
+  <div class="collection-products-container">
+    <div class="collection-products-layout ${section.settings.showFilters ? 'has-sidebar' : ''}">
+
+      <!-- Sidebar Filters -->
+      <@if condition="section.settings.showFilters && section.settings.filterPosition !== 'drawer'">
+        <aside class="collection-sidebar">
+          <div class="filters-wrapper">
+            <div class="filters-header">
+              <h3 class="filters-title">Filters</h3>
+              <button type="button" class="filters-clear" data-clear-filters>Clear All</button>
+            </div>
+
+            <!-- Price Filter -->
+            <div class="filter-group ${section.settings.collapsedFilters ? 'collapsed' : ''}">
+              <button type="button" class="filter-group-header" aria-expanded="${!section.settings.collapsedFilters}">
+                <span>Price</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </button>
+              <div class="filter-group-content">
+                <div class="filter-options">
+                  <label class="filter-option">
+                    <input type="checkbox" name="price" value="0-50" />
+                    <span class="filter-checkbox"></span>
+                    <span>Under $50</span>
+                  </label>
+                  <label class="filter-option">
+                    <input type="checkbox" name="price" value="50-100" />
+                    <span class="filter-checkbox"></span>
+                    <span>$50 - $100</span>
+                  </label>
+                  <label class="filter-option">
+                    <input type="checkbox" name="price" value="100-200" />
+                    <span class="filter-checkbox"></span>
+                    <span>$100 - $200</span>
+                  </label>
+                  <label class="filter-option">
+                    <input type="checkbox" name="price" value="200+" />
+                    <span class="filter-checkbox"></span>
+                    <span>$200+</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Availability Filter -->
+            <div class="filter-group ${section.settings.collapsedFilters ? 'collapsed' : ''}">
+              <button type="button" class="filter-group-header" aria-expanded="${!section.settings.collapsedFilters}">
+                <span>Availability</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </button>
+              <div class="filter-group-content">
+                <div class="filter-options">
+                  <label class="filter-option">
+                    <input type="checkbox" name="availability" value="in-stock" />
+                    <span class="filter-checkbox"></span>
+                    <span>In Stock</span>
+                  </label>
+                  <label class="filter-option">
+                    <input type="checkbox" name="availability" value="out-of-stock" />
+                    <span class="filter-checkbox"></span>
+                    <span>Out of Stock</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Product Type Filter (Dynamic from collection) -->
+            <@if condition="collection.allTypes && collection.allTypes.length > 0">
+              <div class="filter-group ${section.settings.collapsedFilters ? 'collapsed' : ''}">
+                <button type="button" class="filter-group-header" aria-expanded="${!section.settings.collapsedFilters}">
+                  <span>Product Type</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </button>
+                <div class="filter-group-content">
+                  <div class="filter-options">
+                    <@for item="type" in="collection.allTypes">
+                      <label class="filter-option">
+                        <input type="checkbox" name="type" value="${type}" />
+                        <span class="filter-checkbox"></span>
+                        <span>${type}</span>
+                      </label>
+                    </@for>
+                  </div>
+                </div>
+              </div>
+            </@if>
+
+            <!-- Vendor Filter (Dynamic from collection) -->
+            <@if condition="collection.allVendors && collection.allVendors.length > 0">
+              <div class="filter-group ${section.settings.collapsedFilters ? 'collapsed' : ''}">
+                <button type="button" class="filter-group-header" aria-expanded="${!section.settings.collapsedFilters}">
+                  <span>Brand</span>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </button>
+                <div class="filter-group-content">
+                  <div class="filter-options">
+                    <@for item="vendor" in="collection.allVendors">
+                      <label class="filter-option">
+                        <input type="checkbox" name="vendor" value="${vendor}" />
+                        <span class="filter-checkbox"></span>
+                        <span>${vendor}</span>
+                      </label>
+                    </@for>
+                  </div>
+                </div>
+              </div>
+            </@if>
+          </div>
+        </aside>
+      </@if>
+
+      <!-- Main Content -->
+      <div class="collection-main">
+        <!-- Toolbar -->
+        <div class="collection-toolbar">
+          <div class="toolbar-left">
+            <!-- Mobile Filter Toggle -->
+            <@if condition="section.settings.showFilters">
+              <button type="button" class="filter-toggle" data-filter-toggle aria-label="Toggle filters">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
+                  <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
+                  <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+                  <line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/>
+                  <line x1="17" y1="16" x2="23" y2="16"/>
+                </svg>
+                <span>Filters</span>
+              </button>
+            </@if>
+
+            <@if condition="section.settings.showProductCount">
+              <p class="product-count">
+                <span data-product-count>${collection.productsCount}</span>
+                ${collection.productsCount === 1 ? 'product' : 'products'}
+              </p>
+            </@if>
+          </div>
+
+          <div class="toolbar-right">
+            <@if condition="section.settings.showLayoutToggle">
+              <div class="layout-toggle">
+                <button type="button" class="layout-btn active" data-layout="grid" aria-label="Grid view">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+                    <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                  </svg>
+                </button>
+                <button type="button" class="layout-btn" data-layout="list" aria-label="List view">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+                    <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
+                    <line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+                  </svg>
+                </button>
+              </div>
+            </@if>
+
+            <@if condition="section.settings.showSort">
+              <div class="sort-wrapper">
+                <label for="sort-select" class="sort-label">Sort by:</label>
+                <select id="sort-select" class="sort-select" data-sort-select>
+                  <option value="manual">Featured</option>
+                  <option value="best-selling">Best Selling</option>
+                  <option value="title-asc">Alphabetically, A-Z</option>
+                  <option value="title-desc">Alphabetically, Z-A</option>
+                  <option value="price-asc">Price, Low to High</option>
+                  <option value="price-desc">Price, High to Low</option>
+                  <option value="created-desc">Date, New to Old</option>
+                  <option value="created-asc">Date, Old to New</option>
+                </select>
+              </div>
+            </@if>
+          </div>
+        </div>
+
+        <!-- Active Filters -->
+        <div class="active-filters" data-active-filters hidden>
+          <div class="active-filters-list"></div>
+          <button type="button" class="active-filters-clear" data-clear-filters>Clear All</button>
+        </div>
+
+        <!-- Products Grid -->
+        <@if condition="collection.products && collection.products.length > 0">
+          <div
+            class="products-grid"
+            style="--columns: ${section.settings.productsPerRow};"
+            data-products-grid
+          >
+            <@for item="product" in="collection.products">
+              <div class="product-card ${section.settings.showSecondImage ? 'has-hover-image' : ''}">
+                <!-- Product Image -->
+                <a href="/products/${product.handle}" class="product-card-media ratio-${section.settings.imageRatio}">
+                  <@if condition="product.images && product.images.length > 0">
+                    <img
+                      src="${product.images[0].src}"
+                      alt="${product.title}"
+                      class="product-card-image primary"
+                      loading="lazy"
+                    />
+                    <@if condition="section.settings.showSecondImage && product.images.length > 1">
+                      <img
+                        src="${product.images[1].src}"
+                        alt="${product.title}"
+                        class="product-card-image secondary"
+                        loading="lazy"
+                      />
+                    </@if>
+                  <@else>
+                    <div class="product-card-placeholder">
+                      <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                      </svg>
+                    </div>
+                  </@if>
+
+                  <!-- Badges -->
+                  <div class="product-card-badges">
+                    <@if condition="product.compareAtPrice && product.compareAtPrice > product.price">
+                      <span class="badge badge-sale">Sale</span>
+                    </@if>
+                    <@if condition="!product.available">
+                      <span class="badge badge-sold-out">Sold Out</span>
+                    </@if>
+                  </div>
+
+                  <!-- Quick Add -->
+                  <@if condition="section.settings.showQuickAdd && product.available">
+                    <button
+                      type="button"
+                      class="product-card-quick-add"
+                      data-quick-add
+                      data-product-id="${product.id}"
+                      data-variant-id="${product.variants[0].id}"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                      </svg>
+                      Quick Add
+                    </button>
+                  </@if>
+                </a>
+
+                <!-- Product Info -->
+                <div class="product-card-info">
+                  <@if condition="section.settings.showVendor && product.vendor">
+                    <p class="product-card-vendor">${product.vendor}</p>
+                  </@if>
+
+                  <h3 class="product-card-title">
+                    <a href="/products/${product.handle}">${product.title}</a>
+                  </h3>
+
+                  <@if condition="section.settings.showRating && product.rating">
+                    <div class="product-card-rating">
+                      <div class="rating-stars">
+                        <@for item="star" in="range(1, 5)">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                          </svg>
+                        </@for>
+                      </div>
+                    </div>
+                  </@if>
+
+                  <div class="product-card-price">
+                    <@if condition="product.compareAtPrice && product.compareAtPrice > product.price">
+                      <span class="price-compare">${product.compareAtPrice | money}</span>
+                      <span class="price-sale">${product.price | money}</span>
+                    <@else>
+                      <span class="price-regular">${product.price | money}</span>
+                    </@if>
+                  </div>
+                </div>
+              </div>
+            </@for>
+          </div>
+
+          <!-- Pagination -->
+          <@if condition="pagination && pagination.pages > 1">
+            <nav class="pagination" aria-label="Collection pagination">
+              <@if condition="pagination.hasPrev">
+                <a href="?page=${pagination.page - 1}" class="pagination-btn pagination-prev">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"/>
+                  </svg>
+                  Previous
+                </a>
+              </@if>
+
+              <div class="pagination-numbers">
+                <@for item="pageNum" in="pagination.pageNumbers">
+                  <@if condition="pageNum === pagination.page">
+                    <span class="pagination-number active">${pageNum}</span>
+                  <@else>
+                    <a href="?page=${pageNum}" class="pagination-number">${pageNum}</a>
+                  </@if>
+                </@for>
+              </div>
+
+              <@if condition="pagination.hasNext">
+                <a href="?page=${pagination.page + 1}" class="pagination-btn pagination-next">
+                  Next
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                  </svg>
+                </a>
+              </@if>
+            </nav>
+          </@if>
+
+        <@else>
+          <!-- Empty State -->
+          <div class="collection-empty">
+            <div class="empty-icon">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+            </div>
+            <h3 class="empty-title">${section.settings.emptyTitle}</h3>
+            <p class="empty-text">${section.settings.emptyText}</p>
+            <@if condition="section.settings.emptyButtonText && section.settings.emptyButtonUrl">
+              <a href="${section.settings.emptyButtonUrl}" class="empty-btn">
+                ${section.settings.emptyButtonText}
+              </a>
+            </@if>
+          </div>
+        </@if>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.collection-products-section {
+  width: 100%;
+}
+
+.collection-products-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.collection-products-layout {
+  display: flex;
+  gap: 2rem;
+}
+
+.collection-products-layout.has-sidebar {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+}
+
+.filter-right.has-sidebar {
+  grid-template-columns: 1fr 260px;
+}
+
+.filter-right .collection-sidebar {
+  order: 2;
+}
+
+/* Sidebar */
+.collection-sidebar {
+  position: sticky;
+  top: 2rem;
+  align-self: start;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+}
+
+.filters-wrapper {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.filters-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.filters-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.filters-clear {
+  font-size: 0.8rem;
+  color: var(--accent-color, #2563eb);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.filters-clear:hover {
+  text-decoration: underline;
+}
+
+.filter-group {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.filter-group:last-child {
+  border-bottom: none;
+}
+
+.filter-group-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
+
+.filter-group-header svg {
+  transition: transform 0.2s;
+}
+
+.filter-group.collapsed .filter-group-header svg {
+  transform: rotate(-90deg);
+}
+
+.filter-group-content {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.2s;
+  overflow: hidden;
+}
+
+.filter-group.collapsed .filter-group-content {
+  grid-template-rows: 0fr;
+}
+
+.filter-group-content > div {
+  overflow: hidden;
+}
+
+.filter-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding-bottom: 1rem;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.filter-option input {
+  display: none;
+}
+
+.filter-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.filter-option input:checked + .filter-checkbox {
+  background: var(--accent-color, #2563eb);
+  border-color: var(--accent-color, #2563eb);
+}
+
+.filter-option input:checked + .filter-checkbox::after {
+  content: '';
+  width: 6px;
+  height: 10px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+/* Main Content */
+.collection-main {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Toolbar */
+.collection-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.toolbar-left,
+.toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.filter-toggle {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: #f5f5f5;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.product-count {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.layout-toggle {
+  display: flex;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.layout-btn {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.layout-btn:not(:last-child) {
+  border-right: 1px solid #e5e7eb;
+}
+
+.layout-btn.active,
+.layout-btn:hover {
+  color: var(--accent-color, #2563eb);
+  background: #f5f5f5;
+}
+
+.sort-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sort-label {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.sort-select {
+  padding: 0.625rem 2rem 0.625rem 1rem;
+  font-size: 0.875rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 0.75rem center;
+  appearance: none;
+  cursor: pointer;
+}
+
+/* Active Filters */
+.active-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.active-filters-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.active-filter-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  background: #f5f5f5;
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.active-filter-tag button {
+  display: flex;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.active-filter-tag button:hover {
+  color: #dc2626;
+}
+
+.active-filters-clear {
+  font-size: 0.8rem;
+  color: var(--accent-color, #2563eb);
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+/* Products Grid */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--columns, 4), 1fr);
+  gap: 1.5rem;
+}
+
+/* Product Card - Same styles as product-recommendations */
+.product-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card-media {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #f5f5f5;
+}
+
+.ratio-square { aspect-ratio: 1; }
+.ratio-portrait { aspect-ratio: 3/4; }
+.ratio-landscape { aspect-ratio: 4/3; }
+
+.product-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s, transform 0.5s;
+}
+
+.product-card-image.secondary {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.has-hover-image:hover .product-card-image.primary { opacity: 0; }
+.has-hover-image:hover .product-card-image.secondary { opacity: 1; }
+.product-card:hover .product-card-image { transform: scale(1.05); }
+
+.product-card-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: #ccc;
+}
+
+.product-card-badges {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.badge {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 4px;
+}
+
+.badge-sale { background: #dc2626; color: #fff; }
+.badge-sold-out { background: #6b7280; color: #fff; }
+
+.product-card-quick-add {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  background: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.product-card:hover .product-card-quick-add {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.product-card-quick-add:hover {
+  background: var(--accent-color, #2563eb);
+  color: #fff;
+}
+
+.product-card-info {
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.product-card-vendor {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-color, #2563eb);
+  margin: 0;
+}
+
+.product-card-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.product-card-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.product-card-title a:hover {
+  color: var(--accent-color, #2563eb);
+}
+
+.product-card-rating {
+  display: flex;
+  align-items: center;
+}
+
+.rating-stars {
+  display: flex;
+  gap: 0.125rem;
+  color: #fbbf24;
+}
+
+.product-card-price {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.price-compare {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  text-decoration: line-through;
+}
+
+.price-sale {
+  font-weight: 600;
+  color: #dc2626;
+}
+
+.price-regular {
+  font-weight: 600;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.pagination-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.pagination-btn:hover {
+  background: var(--accent-color, #2563eb);
+  border-color: var(--accent-color, #2563eb);
+  color: #fff;
+}
+
+.pagination-numbers {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.pagination-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+}
+
+.pagination-number:hover {
+  background: #f5f5f5;
+}
+
+.pagination-number.active {
+  background: var(--accent-color, #2563eb);
+  color: #fff;
+}
+
+/* Empty State */
+.collection-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #f9fafb;
+  border-radius: 12px;
+}
+
+.empty-icon {
+  color: #d1d5db;
+  margin-bottom: 1.5rem;
+}
+
+.empty-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem;
+}
+
+.empty-text {
+  color: #6b7280;
+  margin: 0 0 1.5rem;
+  max-width: 400px;
+}
+
+.empty-btn {
+  display: inline-flex;
+  padding: 0.875rem 1.75rem;
+  background: var(--accent-color, #2563eb);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: opacity 0.2s;
+}
+
+.empty-btn:hover {
+  opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .collection-products-layout.has-sidebar {
+    grid-template-columns: 220px 1fr;
+  }
+
+  .products-grid {
+    --columns: 3 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .collection-products-container {
+    padding: 0 1rem;
+  }
+
+  .collection-products-layout.has-sidebar {
+    display: block;
+  }
+
+  .collection-sidebar {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .collection-sidebar.open {
+    display: block;
+  }
+
+  .collection-sidebar .filters-wrapper {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 300px;
+    max-width: 85%;
+    border-radius: 0;
+    overflow-y: auto;
+  }
+
+  .filter-toggle {
+    display: flex;
+  }
+
+  .products-grid {
+    --columns: 2 !important;
+    gap: 1rem;
+  }
+
+  .product-card-quick-add {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .sort-label {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .toolbar-left,
+  .toolbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .collection-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+</style>
+
+<script>
+(function() {
+  const section = document.querySelector('[data-section-type="collection-products"][data-section-id="${section.id}"]');
+  if (!section) return;
+
+  // Filter toggle (mobile)
+  const filterToggle = section.querySelector('[data-filter-toggle]');
+  const sidebar = section.querySelector('.collection-sidebar');
+
+  if (filterToggle && sidebar) {
+    filterToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+    });
+
+    sidebar.addEventListener('click', (e) => {
+      if (e.target === sidebar) {
+        sidebar.classList.remove('open');
+      }
+    });
+  }
+
+  // Filter group collapse
+  const filterHeaders = section.querySelectorAll('.filter-group-header');
+  filterHeaders.forEach(header => {
+    header.addEventListener('click', () => {
+      const group = header.closest('.filter-group');
+      group.classList.toggle('collapsed');
+      header.setAttribute('aria-expanded', !group.classList.contains('collapsed'));
+    });
+  });
+
+  // Layout toggle
+  const layoutBtns = section.querySelectorAll('.layout-btn');
+  const productsGrid = section.querySelector('[data-products-grid]');
+
+  layoutBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      layoutBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      // TODO: Implement list view
+    });
+  });
+})();
+</script>

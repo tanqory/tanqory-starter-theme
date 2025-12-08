@@ -1,0 +1,284 @@
+<@schema>
+{
+  "name": "Rich Text",
+  "category": "content",
+  "description": "Flexible text content with various formatting options",
+  "icon": "type",
+  "settings": [
+    {
+      "id": "heading",
+      "type": "text",
+      "label": "Heading",
+      "default": ""
+    },
+    {
+      "id": "content",
+      "type": "richtext",
+      "label": "Content",
+      "default": "<p>Use this section to share information about your brand, products, or any important message you want to convey to your customers.</p>"
+    },
+    {
+      "id": "textAlign",
+      "type": "select",
+      "label": "Text Alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    },
+    {
+      "id": "contentWidth",
+      "type": "select",
+      "label": "Content Width",
+      "options": [
+        { "value": "narrow", "label": "Narrow" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "wide", "label": "Wide" }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "backgroundColor",
+      "type": "color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "id": "textColor",
+      "type": "color",
+      "label": "Text Color",
+      "default": "#333333"
+    },
+    {
+      "id": "headingSize",
+      "type": "select",
+      "label": "Heading Size",
+      "options": [
+        { "value": "small", "label": "Small" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "large", "label": "Large" }
+      ],
+      "default": "medium"
+    },
+    {
+      "id": "showButton",
+      "type": "checkbox",
+      "label": "Show Button",
+      "default": false
+    },
+    {
+      "id": "buttonText",
+      "type": "text",
+      "label": "Button Text",
+      "default": "Learn More"
+    },
+    {
+      "id": "buttonUrl",
+      "type": "url",
+      "label": "Button URL",
+      "default": ""
+    },
+    {
+      "id": "buttonStyle",
+      "type": "select",
+      "label": "Button Style",
+      "options": [
+        { "value": "primary", "label": "Primary" },
+        { "value": "secondary", "label": "Secondary" },
+        { "value": "outline", "label": "Outline" }
+      ],
+      "default": "primary"
+    },
+    {
+      "id": "paddingTop",
+      "type": "range",
+      "label": "Padding Top (px)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 60
+    },
+    {
+      "id": "paddingBottom",
+      "type": "range",
+      "label": "Padding Bottom (px)",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 60
+    }
+  ],
+  "presets": [
+    {
+      "name": "Default Rich Text",
+      "category": "content"
+    }
+  ]
+}
+</@schema>
+
+<section
+  class="rich-text-section"
+  style="
+    background-color: ${section.settings.backgroundColor};
+    color: ${section.settings.textColor};
+    padding-top: ${section.settings.paddingTop}px;
+    padding-bottom: ${section.settings.paddingBottom}px;
+  "
+  data-section-id="${section.id}"
+  data-section-type="rich-text"
+>
+  <div class="rich-text-container container-${section.settings.contentWidth}" style="text-align: ${section.settings.textAlign};">
+    <@if condition="section.settings.heading">
+      <h2 class="rich-text-heading heading-${section.settings.headingSize}">
+        ${section.settings.heading}
+      </h2>
+    </@if>
+
+    <@if condition="section.settings.content">
+      <div class="rich-text-content">
+        ${section.settings.content}
+      </div>
+    </@if>
+
+    <@if condition="section.settings.showButton && section.settings.buttonText">
+      <div class="rich-text-button">
+        <a
+          href="${section.settings.buttonUrl}"
+          class="rich-text-btn btn-${section.settings.buttonStyle}"
+        >
+          ${section.settings.buttonText}
+        </a>
+      </div>
+    </@if>
+  </div>
+</section>
+
+<style>
+.rich-text-section {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.rich-text-container {
+  margin: 0 auto;
+}
+
+.container-narrow { max-width: 600px; }
+.container-medium { max-width: 800px; }
+.container-wide { max-width: 1000px; }
+
+.rich-text-heading {
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 1.5rem 0;
+}
+
+.heading-small { font-size: clamp(1.25rem, 3vw, 1.5rem); }
+.heading-medium { font-size: clamp(1.5rem, 4vw, 2rem); }
+.heading-large { font-size: clamp(2rem, 5vw, 3rem); }
+
+.rich-text-content {
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
+
+.rich-text-content p {
+  margin: 0 0 1rem 0;
+}
+
+.rich-text-content p:last-child {
+  margin-bottom: 0;
+}
+
+.rich-text-content a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.rich-text-content a:hover {
+  opacity: 0.8;
+}
+
+.rich-text-content ul,
+.rich-text-content ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.rich-text-content li {
+  margin-bottom: 0.5rem;
+}
+
+.rich-text-content blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  border-left: 4px solid currentColor;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+.rich-text-button {
+  margin-top: 2rem;
+}
+
+.rich-text-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: currentColor;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  background: rgba(0, 0, 0, 0.1);
+  color: inherit;
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.btn-outline {
+  background: transparent;
+  color: inherit;
+  border: 2px solid currentColor;
+}
+
+.btn-outline:hover {
+  background: currentColor;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .rich-text-section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .rich-text-content {
+    font-size: 1rem;
+  }
+
+  .rich-text-btn {
+    padding: 0.875rem 1.5rem;
+    font-size: 0.95rem;
+  }
+}
+</style>

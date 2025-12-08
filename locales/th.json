@@ -1,0 +1,156 @@
+{
+  "general": {
+    "skip_to_content": "ข้ามไปยังเนื้อหา",
+    "loading": "กำลังโหลด...",
+    "search": "ค้นหา",
+    "close": "ปิด",
+    "menu": "เมนู",
+    "share": "แชร์",
+    "copy_link": "คัดลอกลิงก์",
+    "link_copied": "คัดลอกลิงก์แล้ว!",
+    "previous": "ก่อนหน้า",
+    "next": "ถัดไป",
+    "view_all": "ดูทั้งหมด"
+  },
+
+  "header": {
+    "search_placeholder": "ค้นหาสินค้า...",
+    "account": "บัญชี",
+    "cart": "ตะกร้า",
+    "menu": "เมนู"
+  },
+
+  "products": {
+    "add_to_cart": "เพิ่มลงตะกร้า",
+    "sold_out": "สินค้าหมด",
+    "unavailable": "ไม่พร้อมจำหน่าย",
+    "quantity": "จำนวน",
+    "decrease_quantity": "ลดจำนวน",
+    "increase_quantity": "เพิ่มจำนวน",
+    "sale": "ลดราคา",
+    "new": "ใหม่",
+    "from_price": "เริ่มต้น {{ price }}",
+    "regular_price": "ราคาปกติ",
+    "sale_price": "ราคาลดพิเศษ",
+    "unit_price": "ราคาต่อหน่วย",
+    "per": "ต่อ",
+    "sku": "รหัสสินค้า",
+    "vendor": "แบรนด์",
+    "type": "ประเภท",
+    "availability": "สถานะสินค้า",
+    "in_stock": "มีสินค้า",
+    "out_of_stock": "สินค้าหมด",
+    "low_stock": "สินค้าเหลือน้อย",
+    "only_x_left": "เหลือเพียง {{ count }} ชิ้น"
+  },
+
+  "product": {
+    "description": "รายละเอียด",
+    "details": "ข้อมูลสินค้า",
+    "reviews": "รีวิว",
+    "shipping": "การจัดส่งและคืนสินค้า",
+    "share_on_facebook": "แชร์บน Facebook",
+    "share_on_twitter": "แชร์บน Twitter",
+    "share_on_pinterest": "ปักหมุดบน Pinterest",
+    "you_may_also_like": "สินค้าที่คุณอาจสนใจ",
+    "recently_viewed": "สินค้าที่เพิ่งดู"
+  },
+
+  "collections": {
+    "title": "คอลเลกชัน",
+    "all": "สินค้าทั้งหมด",
+    "empty": "ไม่พบสินค้า",
+    "filter": "ตัวกรอง",
+    "sort": "เรียงลำดับ",
+    "clear_all": "ล้างทั้งหมด",
+    "apply": "ใช้งาน",
+    "products_count": {
+      "one": "{{ count }} สินค้า",
+      "other": "{{ count }} สินค้า"
+    }
+  },
+
+  "cart": {
+    "title": "ตะกร้าสินค้า",
+    "empty": "ตะกร้าของคุณว่างเปล่า",
+    "continue_shopping": "เลือกซื้อสินค้าต่อ",
+    "subtotal": "รวม",
+    "shipping_at_checkout": "ค่าจัดส่งคำนวณเมื่อชำระเงิน",
+    "taxes_included": "รวมภาษีแล้ว",
+    "checkout": "ชำระเงิน",
+    "view_cart": "ดูตะกร้า",
+    "remove": "ลบ",
+    "update": "อัปเดต",
+    "note": "หมายเหตุสำหรับคำสั่งซื้อ",
+    "note_placeholder": "คำแนะนำพิเศษสำหรับคำสั่งซื้อของคุณ"
+  },
+
+  "customer": {
+    "account": "บัญชี",
+    "login": "เข้าสู่ระบบ",
+    "logout": "ออกจากระบบ",
+    "register": "สร้างบัญชี",
+    "email": "อีเมล",
+    "password": "รหัสผ่าน",
+    "forgot_password": "ลืมรหัสผ่าน?",
+    "reset_password": "รีเซ็ตรหัสผ่าน",
+    "first_name": "ชื่อ",
+    "last_name": "นามสกุล",
+    "orders": "ประวัติคำสั่งซื้อ",
+    "addresses": "ที่อยู่",
+    "no_orders": "คุณยังไม่มีคำสั่งซื้อ"
+  },
+
+  "newsletter": {
+    "title": "สมัครรับข่าวสาร",
+    "subtitle": "รับข้อมูลอัปเดตและข้อเสนอพิเศษ",
+    "email_placeholder": "กรอกอีเมลของคุณ",
+    "subscribe": "สมัครสมาชิก",
+    "success": "ขอบคุณที่สมัครรับข่าวสาร!",
+    "error": "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง"
+  },
+
+  "footer": {
+    "quick_links": "ลิงก์ด่วน",
+    "customer_service": "บริการลูกค้า",
+    "about_us": "เกี่ยวกับเรา",
+    "contact": "ติดต่อเรา",
+    "privacy_policy": "นโยบายความเป็นส่วนตัว",
+    "terms_of_service": "ข้อกำหนดในการให้บริการ",
+    "shipping_policy": "นโยบายการจัดส่ง",
+    "refund_policy": "นโยบายการคืนเงิน",
+    "copyright": "สงวนลิขสิทธิ์"
+  },
+
+  "accessibility": {
+    "skip_to_content": "ข้ามไปยังเนื้อหา",
+    "close_menu": "ปิดเมนู",
+    "open_menu": "เปิดเมนู",
+    "loading": "กำลังโหลด",
+    "image": "รูปภาพ",
+    "play": "เล่น",
+    "pause": "หยุดชั่วคราว",
+    "expand": "ขยาย",
+    "collapse": "ย่อ"
+  },
+
+  "errors": {
+    "general": "เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง",
+    "cart_add_error": "ไม่สามารถเพิ่มสินค้าลงตะกร้าได้",
+    "cart_update_error": "ไม่สามารถอัปเดตตะกร้าได้",
+    "form_error": "กรุณาตรวจสอบข้อมูลในฟอร์ม",
+    "required": "จำเป็นต้องกรอกข้อมูลนี้",
+    "email_invalid": "กรุณากรอกอีเมลที่ถูกต้อง"
+  },
+
+  "date": {
+    "formats": {
+      "short": "D MMM YYYY",
+      "long": "D MMMM YYYY"
+    }
+  },
+
+  "currency": {
+    "format": "{{ amount }} บาท"
+  }
+}

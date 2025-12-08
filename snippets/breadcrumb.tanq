@@ -1,0 +1,80 @@
+<@snippet id="breadcrumb" name="Breadcrumb">
+<!--
+  Breadcrumb navigation snippet
+  Used by: product, collection, page templates
+
+  Expected context:
+  - breadcrumbs: Array of { title, url } objects
+  - Or auto-generated from template context
+-->
+
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
+    <!-- Home -->
+    <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <a href="/" itemprop="item">
+        <span itemprop="name">Home</span>
+      </a>
+      <meta itemprop="position" content="1" />
+    </li>
+
+    <!-- Dynamic breadcrumbs -->
+    <@for item="crumb" in="breadcrumbs">
+      <li class="breadcrumb-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span class="breadcrumb-separator" aria-hidden="true">/</span>
+        <@if condition="crumb.url && !crumb_last">
+          <a href="${crumb.url}" itemprop="item">
+            <span itemprop="name">${crumb.title}</span>
+          </a>
+        <@else>
+          <span itemprop="name" aria-current="page">${crumb.title}</span>
+        </@if>
+        <meta itemprop="position" content="${crumb_index + 2}" />
+      </li>
+    </@for>
+  </ol>
+</nav>
+
+<style>
+.breadcrumb {
+  padding: 1rem 0;
+}
+
+.breadcrumb-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.breadcrumb-item a {
+  color: #6b7280;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.breadcrumb-item a:hover {
+  color: #1a1a1a;
+  text-decoration: underline;
+}
+
+.breadcrumb-item span[aria-current="page"] {
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+.breadcrumb-separator {
+  color: #d1d5db;
+}
+</style>
+</@snippet>
