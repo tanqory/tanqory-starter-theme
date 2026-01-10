@@ -2,16 +2,10 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart, Menu, X, Search, User } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from './ui/Button';
+import { themeConfig } from '@/config';
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const navigation = [
-    { name: 'หน้าแรก', href: '/' },
-    { name: 'สินค้า', href: '/products' },
-    { name: 'เกี่ยวกับเรา', href: '/about' },
-    { name: 'ติดต่อ', href: '/contact' },
-  ];
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
@@ -20,14 +14,18 @@ export function Header() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">T</span>
+              <span className="text-white font-bold text-lg">
+                {themeConfig.store.name[0]}
+              </span>
             </div>
-            <span className="font-bold text-xl text-gray-900">My Store</span>
+            <span className="font-bold text-xl text-gray-900">
+              {themeConfig.store.name}
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            {navigation.map((item) => (
+            {themeConfig.navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
@@ -69,7 +67,7 @@ export function Header() {
         {mobileMenuOpen && (
           <div className="md:hidden py-4 border-t">
             <div className="flex flex-col gap-2">
-              {navigation.map((item) => (
+              {themeConfig.navigation.map((item) => (
                 <Link
                   key={item.name}
                   to={item.href}

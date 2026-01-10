@@ -1,24 +1,31 @@
-# Tanqory Starter Theme - Pre-built Docker Image
-# Dependencies are pre-installed for instant VM startup
+# Tanqory Starter Theme - Optimized Docker Image
+# Multi-stage build for smaller image size
+# Dependencies pre-installed for instant VM startup
 
-FROM node:20-alpine
-
+# Stage 1: Dependencies
+FROM node:20-alpine AS deps
 WORKDIR /app
 
-# Install git for potential future use
-RUN apk add --no-cache git
+# Install dependencies only when needed
+COPY package.json package-lock.json* ./
+RUN npm ci --ignore-scripts 2>/dev/null || npm install
 
-# Copy package files first for better layer caching
-COPY package*.json ./
+# Stage 2: Development
+FROM node:20-alpine AS dev
+WORKDIR /app
 
-# Install dependencies (cached in image - no npm install needed at runtime)
-RUN npm install
+# Copy node_modules from deps stage
+COPY --from=deps /app/node_modules ./node_modules
 
-# Copy all source files
+# Copy source files
 COPY . .
 
 # Expose Vite dev server port
 EXPOSE 5173
 
-# Start Vite dev server with host binding for external access
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]
+# Health check for Fly.io
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:5173/ || exit 1
+
+# Start Vite dev server with HMR enabled
+CMD ["npm", "run", "dev"]
