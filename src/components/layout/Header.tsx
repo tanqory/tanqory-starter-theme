@@ -2,14 +2,13 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, ShoppingCart, Search } from 'lucide-react';
 import { Container } from './Container';
-import { Button } from '../ui/Button';
-import { useCartStore } from '../../stores/cart-store';
+import { useCartStore } from '../../stores/cart';
 import { NAV_LINKS, SITE_NAME } from '../../lib/constants';
 import { cn } from '../../lib/utils';
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const totalItems = useCartStore((state) => state.totalItems);
+  const totalItems = useCartStore((state) => state.getItemCount());
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
