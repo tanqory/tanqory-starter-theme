@@ -10,5 +10,12 @@ export default defineConfig({
     watch: {
       usePolling: true,
     },
+    // CORS headers for iframe embedding from Studio
+    headers: {
+      'Cross-Origin-Embedder-Policy': 'credentialless',
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Resource-Policy': 'cross-origin',
+      'Access-Control-Allow-Origin': '*',
+    },
   },
 });
