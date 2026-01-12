@@ -1,59 +1,61 @@
 import { Layout } from '../components/layout/Layout';
 import { Hero } from '../components/sections/Hero';
-import { FeaturedProducts } from '../components/sections/FeaturedProducts';
-import { Categories } from '../components/sections/Categories';
-import { Testimonials } from '../components/sections/Testimonials';
-import { Newsletter } from '../components/sections/Newsletter';
-import { getFeaturedProducts } from '../data/products';
-import { categories } from '../data/categories';
-import { testimonials } from '../data/testimonials';
-import { useCartStore } from '../stores/cart';
-import type { Product } from '../types/product';
+import { ProductList } from '../components/sections/ProductList';
+import { CollectionList } from '../components/sections/CollectionList';
+import { Marquee } from '../components/sections/Marquee';
+import { MediaWithContent } from '../components/sections/MediaWithContent';
 
 export function HomePage() {
-  const addItem = useCartStore((state) => state.addItem);
-  const featuredProducts = getFeaturedProducts(8);
-
-  const handleAddToCart = (product: Product) => {
-    addItem(product, 1);
-  };
-
   return (
     <Layout>
+      {/* Hero Section */}
       <Hero
-        title="ยินดีต้อนรับสู่ร้านค้าของเรา"
-        subtitle="ค้นพบสินค้าคุณภาพที่คัดสรรมาเพื่อคุณโดยเฉพาะ ด้วยราคาที่คุ้มค่า"
-        ctaText="เลือกซื้อสินค้า"
-        ctaLink="/products"
-        secondaryCtaText="ดูหมวดหมู่"
-        secondaryCtaLink="/categories"
+        heading="Welcome to Our Store"
+        subheading="Discover quality products curated just for you at affordable prices."
+        buttonLabel="Shop Now"
+        buttonLink="/products"
+        secondaryButtonLabel="View Collections"
+        secondaryButtonLink="/collections"
+        sectionHeight="large"
+        horizontalAlignment="center"
+        colorScheme="dark"
       />
 
-      <FeaturedProducts
-        title="สินค้าแนะนำ"
-        subtitle="สินค้ายอดนิยมที่คุณไม่ควรพลาด"
-        products={featuredProducts}
-        onAddToCart={handleAddToCart}
+      {/* Announcement */}
+      <Marquee
+        text="Free shipping on orders over ฿1,500 • New arrivals weekly • 30-day returns"
+        colorScheme="dark"
+        paddingTop={12}
+        paddingBottom={12}
       />
 
-      <Categories
-        title="หมวดหมู่สินค้า"
-        subtitle="เลือกดูสินค้าตามหมวดหมู่ที่คุณสนใจ"
-        categories={categories}
+      {/* Featured Products */}
+      <ProductList
+        title="Featured Products"
+        columns={4}
+        paddingTop={48}
+        paddingBottom={48}
+      />
+
+      {/* Featured Collections */}
+      <CollectionList
+        title="Shop by Category"
         columns={3}
+        cardStyle="overlay"
+        paddingTop={48}
+        paddingBottom={48}
       />
 
-      <Testimonials
-        title="รีวิวจากลูกค้า"
-        subtitle="ความคิดเห็นจากลูกค้าที่ไว้วางใจเรา"
-        testimonials={testimonials.slice(0, 3)}
-        columns={3}
-      />
-
-      <Newsletter
-        title="สมัครรับข่าวสาร"
-        subtitle="รับโปรโมชั่นและข่าวสารสินค้าใหม่ก่อนใคร"
-        backgroundColor="primary"
+      {/* About Section */}
+      <MediaWithContent
+        heading="Our Story"
+        subheading="About Us"
+        description="We believe in quality craftsmanship and sustainable practices. Every product in our store is carefully selected to bring you the best value."
+        buttonLabel="Learn More"
+        buttonLink="/about"
+        mediaPosition="left"
+        paddingTop={48}
+        paddingBottom={48}
       />
     </Layout>
   );

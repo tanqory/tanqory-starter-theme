@@ -1,19 +1,5 @@
-export interface Product {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  price: number;
-  compareAtPrice?: number;
-  images: string[];
-  category: string;
-  tags: string[];
-  inStock: boolean;
-  stockQuantity: number;
-  rating?: number;
-  reviewCount?: number;
-  createdAt: string;
-}
+// Re-export Product from APIs for consistency
+export type { Product, ProductImage, ProductVariant, ProductOption } from '../apis/ProductsApi';
 
 export interface Category {
   id: string;

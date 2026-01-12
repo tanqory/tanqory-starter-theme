@@ -3,7 +3,7 @@ import { ShoppingCart, Heart, Minus, Plus, Share2 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { formatPrice } from '../../lib/utils';
-import type { Product } from '../../types/product';
+import type { Product } from '../../apis';
 
 export interface ProductInfoProps {
   product: Product;
@@ -41,13 +41,13 @@ export function ProductInfo({
       {/* Badges */}
       <div className="flex gap-2">
         {hasDiscount && (
-          <Badge variant="danger">ลด {discountPercent}%</Badge>
+          <Badge variant="error">ลด {discountPercent}%</Badge>
         )}
         {product.isNew && (
           <Badge variant="success">สินค้าใหม่</Badge>
         )}
-        {!product.inStock && (
-          <Badge variant="secondary">สินค้าหมด</Badge>
+        {!product.availableForSale && (
+          <Badge variant="default">สินค้าหมด</Badge>
         )}
       </div>
 
@@ -76,7 +76,7 @@ export function ProductInfo({
       )}
 
       {/* Quantity Selector */}
-      {product.inStock && (
+      {product.availableForSale && (
         <div className="flex items-center gap-4">
           <span className="text-gray-600">จำนวน:</span>
           <div className="flex items-center border rounded-lg">
@@ -100,7 +100,7 @@ export function ProductInfo({
 
       {/* Actions */}
       <div className="flex gap-3">
-        {product.inStock ? (
+        {product.availableForSale ? (
           <Button
             onClick={() => onAddToCart?.(product, quantity)}
             className="flex-1"

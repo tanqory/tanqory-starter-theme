@@ -4,7 +4,7 @@ import { Card, CardImage, CardContent } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { formatPrice } from '../../lib/utils';
-import type { Product } from '../../types/product';
+import type { Product } from '../../apis';
 
 export interface ProductCardProps {
   product: Product;
@@ -29,18 +29,17 @@ export function ProductCard({
       <Link to={`/products/${product.slug}`}>
         <div className="relative">
           <CardImage
-            src={product.images[0] || '/placeholder.jpg'}
-            alt={product.name}
-            aspectRatio="4/5"
+            src={product.images[0]?.src || '/placeholder.jpg'}
+            alt={product.name || product.title}
           />
 
           {/* Badges */}
           <div className="absolute top-2 left-2 flex flex-col gap-1">
             {hasDiscount && (
-              <Badge variant="danger">-{discountPercent}%</Badge>
+              <Badge variant="error">-{discountPercent}%</Badge>
             )}
-            {!product.inStock && (
-              <Badge variant="secondary">สินค้าหมด</Badge>
+            {!product.availableForSale && (
+              <Badge variant="default">สินค้าหมด</Badge>
             )}
             {product.isNew && (
               <Badge variant="success">ใหม่</Badge>
@@ -84,7 +83,7 @@ export function ProductCard({
           )}
         </div>
 
-        {showQuickActions && onAddToCart && product.inStock && (
+        {showQuickActions && onAddToCart && product.availableForSale && (
           <Button
             onClick={() => onAddToCart(product)}
             className="w-full mt-3"

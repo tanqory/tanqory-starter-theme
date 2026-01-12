@@ -4,8 +4,8 @@ import { Layout } from '../components/layout/Layout';
 import { Container } from '../components/layout/Container';
 import { ProductGallery } from '../components/product/ProductGallery';
 import { ProductInfo } from '../components/product/ProductInfo';
-import { FeaturedProducts } from '../components/sections/FeaturedProducts';
-import { getProductBySlug, getFeaturedProducts } from '../data/products';
+import { ProductList } from '../components/sections/ProductList';
+import { getProductBySlug } from '../data/products';
 import { useCartStore } from '../stores/cart';
 import type { Product } from '../types/product';
 
@@ -14,7 +14,6 @@ export function ProductDetailPage() {
   const addItem = useCartStore((state) => state.addItem);
 
   const product = slug ? getProductBySlug(slug) : undefined;
-  const relatedProducts = getFeaturedProducts(4);
 
   const handleAddToCart = (product: Product, quantity: number) => {
     addItem(product, quantity);
@@ -55,16 +54,15 @@ export function ProductDetailPage() {
 
         {/* Product Detail */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          <ProductGallery images={product.images} productName={product.name} />
+          <ProductGallery images={product.images?.map(img => img.src) || []} productName={product.name || product.title} />
           <ProductInfo product={product} onAddToCart={handleAddToCart} />
         </div>
       </Container>
 
       {/* Related Products */}
-      <FeaturedProducts
+      <ProductList
         title="สินค้าที่คุณอาจชอบ"
-        products={relatedProducts}
-        showViewAll={false}
+        columns={4}
       />
     </Layout>
   );

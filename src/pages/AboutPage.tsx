@@ -1,7 +1,7 @@
 import { Store, Truck, Shield, Headphones } from 'lucide-react';
 import { Layout } from '../components/layout/Layout';
 import { Container } from '../components/layout/Container';
-import { Newsletter } from '../components/sections/Newsletter';
+import { NewsletterSection } from '../components/sections/NewsletterSection';
 
 const features = [
   {
@@ -103,7 +103,7 @@ export function AboutPage() {
         </Container>
       </section>
 
-      <Newsletter backgroundColor="primary" />
+      <NewsletterSection backgroundColor="#000000" textColor="light" />
     </Layout>
   );
 }

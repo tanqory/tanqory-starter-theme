@@ -13,63 +13,59 @@ interface CartState extends Cart {
   getItemCount: () => number;
 }
 
+const calculateTotals = (items: CartItem[]) => {
+  const totalItems = items.reduce((count, item) => count + item.quantity, 0);
+  const totalPrice = items.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0
+  );
+  return { totalItems, totalPrice };
+};
+
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
-      subtotal: 0,
-      discount: 0,
-      shipping: 0,
-      total: 0,
+      totalItems: 0,
+      totalPrice: 0,
 
       addItem: (product: Product, quantity = 1) => {
         set((state) => {
-          const existingItem = state.items.find((item) => item.productId === product.id);
+          const existingItemIndex = state.items.findIndex(
+            (item) => item.product.id === product.id
+          );
 
           let newItems: CartItem[];
 
-          if (existingItem) {
-            newItems = state.items.map((item) =>
-              item.productId === product.id
+          if (existingItemIndex >= 0) {
+            newItems = state.items.map((item, index) =>
+              index === existingItemIndex
                 ? { ...item, quantity: item.quantity + quantity }
                 : item
             );
           } else {
             const newItem: CartItem = {
-              productId: product.id,
-              name: product.name,
-              price: product.price,
-              image: product.images[0],
+              product,
               quantity,
             };
             newItems = [...state.items, newItem];
           }
 
-          const subtotal = newItems.reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
-          );
-
           return {
             items: newItems,
-            subtotal,
-            total: subtotal - state.discount + state.shipping,
+            ...calculateTotals(newItems),
           };
         });
       },
 
       removeItem: (productId: string) => {
         set((state) => {
-          const newItems = state.items.filter((item) => item.productId !== productId);
-          const subtotal = newItems.reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
+          const newItems = state.items.filter(
+            (item) => item.product.id !== productId
           );
-
           return {
             items: newItems,
-            subtotal,
-            total: subtotal - state.discount + state.shipping,
+            ...calculateTotals(newItems),
           };
         });
       },
@@ -82,18 +78,11 @@ export const useCartStore = create<CartState>()(
 
         set((state) => {
           const newItems = state.items.map((item) =>
-            item.productId === productId ? { ...item, quantity } : item
+            item.product.id === productId ? { ...item, quantity } : item
           );
-
-          const subtotal = newItems.reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
-          );
-
           return {
             items: newItems,
-            subtotal,
-            total: subtotal - state.discount + state.shipping,
+            ...calculateTotals(newItems),
           };
         });
       },
@@ -101,15 +90,13 @@ export const useCartStore = create<CartState>()(
       clearCart: () => {
         set({
           items: [],
-          subtotal: 0,
-          discount: 0,
-          shipping: 0,
-          total: 0,
+          totalItems: 0,
+          totalPrice: 0,
         });
       },
 
       getItemCount: () => {
-        return get().items.reduce((count, item) => count + item.quantity, 0);
+        return get().totalItems;
       },
     }),
     {

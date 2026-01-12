@@ -29,14 +29,14 @@ export function ProductsPage() {
       const searchLower = search.toLowerCase();
       result = result.filter(
         (p) =>
-          p.name.toLowerCase().includes(searchLower) ||
+          (p.name || p.title).toLowerCase().includes(searchLower) ||
           p.description?.toLowerCase().includes(searchLower)
       );
     }
 
     // Filter by category
     if (selectedCategory) {
-      result = result.filter((p) => p.category === selectedCategory);
+      result = result.filter((p) => p.productType === selectedCategory);
     }
 
     // Sort
@@ -48,7 +48,7 @@ export function ProductsPage() {
         result.sort((a, b) => b.price - a.price);
         break;
       case 'name':
-        result.sort((a, b) => a.name.localeCompare(b.name));
+        result.sort((a, b) => (a.name || a.title).localeCompare(b.name || b.title));
         break;
       default:
         // newest - keep original order

@@ -7,7 +7,7 @@ import { useCartStore } from '../stores/cart';
 import { formatPrice } from '../lib/utils';
 
 export function CartPage() {
-  const { items, subtotal, total, updateQuantity, removeItem, clearCart } =
+  const { items, totalPrice, updateQuantity, removeItem, clearCart } =
     useCartStore();
 
   if (items.length === 0) {
@@ -21,9 +21,9 @@ export function CartPage() {
           <p className="text-gray-600 mb-8">
             คุณยังไม่มีสินค้าในตะกร้า เริ่มเลือกซื้อสินค้าได้เลย
           </p>
-          <Button asChild size="lg">
-            <Link to="/products">เลือกซื้อสินค้า</Link>
-          </Button>
+          <Link to="/products">
+            <Button size="lg">เลือกซื้อสินค้า</Button>
+          </Link>
         </Container>
       </Layout>
     );
@@ -44,15 +44,15 @@ export function CartPage() {
           <div className="lg:col-span-2 space-y-4">
             {items.map((item) => (
               <div
-                key={item.productId}
+                key={item.product.id}
                 className="flex gap-4 bg-white rounded-lg border p-4"
               >
                 {/* Image */}
                 <div className="w-24 h-24 flex-shrink-0 bg-gray-100 rounded-lg overflow-hidden">
-                  {item.image && (
+                  {item.product.images[0] && (
                     <img
-                      src={item.image}
-                      alt={item.name}
+                      src={item.product.images[0].src}
+                      alt={item.product.name || item.product.title}
                       className="w-full h-full object-cover"
                     />
                   )}
@@ -61,17 +61,17 @@ export function CartPage() {
                 {/* Info */}
                 <div className="flex-1 min-w-0">
                   <h3 className="font-medium text-gray-900 truncate">
-                    {item.name}
+                    {item.product.name}
                   </h3>
                   <p className="text-primary-600 font-semibold mt-1">
-                    {formatPrice(item.price)}
+                    {formatPrice(item.product.price)}
                   </p>
 
                   {/* Quantity */}
                   <div className="flex items-center gap-2 mt-3">
                     <button
                       onClick={() =>
-                        updateQuantity(item.productId, item.quantity - 1)
+                        updateQuantity(item.product.id, item.quantity - 1)
                       }
                       className="w-8 h-8 flex items-center justify-center border rounded hover:bg-gray-100"
                     >
@@ -80,7 +80,7 @@ export function CartPage() {
                     <span className="w-8 text-center">{item.quantity}</span>
                     <button
                       onClick={() =>
-                        updateQuantity(item.productId, item.quantity + 1)
+                        updateQuantity(item.product.id, item.quantity + 1)
                       }
                       className="w-8 h-8 flex items-center justify-center border rounded hover:bg-gray-100"
                     >
@@ -92,13 +92,13 @@ export function CartPage() {
                 {/* Price & Remove */}
                 <div className="flex flex-col items-end justify-between">
                   <button
-                    onClick={() => removeItem(item.productId)}
+                    onClick={() => removeItem(item.product.id)}
                     className="p-2 text-gray-400 hover:text-red-600"
                   >
                     <Trash2 className="w-5 h-5" />
                   </button>
                   <p className="font-semibold text-gray-900">
-                    {formatPrice(item.price * item.quantity)}
+                    {formatPrice(item.product.price * item.quantity)}
                   </p>
                 </div>
               </div>
@@ -115,7 +115,7 @@ export function CartPage() {
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <span className="text-gray-600">ยอดรวมสินค้า</span>
-                  <span className="font-medium">{formatPrice(subtotal)}</span>
+                  <span className="font-medium">{formatPrice(totalPrice)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">ค่าจัดส่ง</span>
@@ -124,7 +124,7 @@ export function CartPage() {
                 <div className="border-t pt-3">
                   <div className="flex justify-between text-base font-semibold">
                     <span>ยอดรวมทั้งหมด</span>
-                    <span className="text-primary-600">{formatPrice(total)}</span>
+                    <span className="text-primary-600">{formatPrice(totalPrice)}</span>
                   </div>
                 </div>
               </div>

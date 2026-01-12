@@ -30,4 +30,5 @@ export const CONTACT_INFO = {
   phone: '02-xxx-xxxx',
   email: 'contact@example.com',
   address: 'กรุงเทพมหานคร, ประเทศไทย',
+  workingHours: 'จันทร์ - ศุกร์: 9:00 - 18:00 น.',
 };

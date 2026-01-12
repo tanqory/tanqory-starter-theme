@@ -4,3 +4,7 @@ export * from './ProductDetailPage';
 export * from './CartPage';
 export * from './AboutPage';
 export * from './ContactPage';
+export * from './SearchPage';
+export * from './BlogPage';
+export * from './ArticlePage';
+export * from './NotFoundPage';
