@@ -60,3 +60,5 @@ export function HomePage() {
     </Layout>
   );
 }
+
+export default HomePage;
