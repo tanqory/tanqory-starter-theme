@@ -62,7 +62,8 @@ type Action =
   | { type: 'RESET' }
   | { type: 'LOAD_FROM_STORAGE'; payload: Partial<GlobalVariables> }
   | { type: 'UPDATE'; payload: { key: keyof GlobalVariables; value: unknown } }
-  | { type: 'UPDATE_MANY'; payload: Partial<GlobalVariables> };
+  | { type: 'UPDATE_MANY'; payload: Partial<GlobalVariables> }
+  | { type: 'INJECT_CONFIG'; payload: Partial<GlobalVariables> };
 
 // =============================================================================
 // Default Values
@@ -169,6 +170,10 @@ const reducer = (state: GlobalVariables, action: Action): GlobalVariables => {
         ? { ...state, ...action.payload }
         : state;
 
+    // Config injection from Studio - always applies regardless of __loaded__ state
+    case 'INJECT_CONFIG':
+      return { ...state, ...action.payload };
+
     default:
       return state;
   }
@@ -198,6 +203,54 @@ export function GlobalVariableProvider({ children, initialValues }: GlobalVariab
     const stored = loadFromStorage();
     dispatch({ type: 'LOAD_FROM_STORAGE', payload: { ...stored, ...initialValues } });
   }, [initialValues]);
+
+  // Listen for config injection from Studio (via editor-bridge.ts)
+  useEffect(() => {
+    const handleConfigEvent = (event: Event) => {
+      const customEvent = event as CustomEvent<{
+        storeId?: string;
+        apiUrl?: string;
+        accessToken?: string;
+        storeName?: string;
+      }>;
+      const config = customEvent.detail;
+
+      if (config) {
+        console.log('[GlobalVariables] Received config from Studio:', config);
+        // Use INJECT_CONFIG to bypass __loaded__ check
+        const payload: Partial<GlobalVariables> = {};
+        if (config.storeId) payload.storeId = config.storeId;
+        if (config.apiUrl) payload.apiUrl = config.apiUrl;
+        if (config.accessToken) payload.accessToken = config.accessToken;
+        if (config.storeName) payload.storeName = config.storeName;
+        dispatch({ type: 'INJECT_CONFIG', payload });
+      }
+    };
+
+    window.addEventListener('tanqory:config', handleConfigEvent);
+
+    // Also check for config that was set before provider mounted
+    const windowConfig = (window as unknown as { __TANQORY_CONFIG__?: {
+      storeId?: string;
+      apiUrl?: string;
+      accessToken?: string;
+      storeName?: string;
+    } }).__TANQORY_CONFIG__;
+
+    if (windowConfig) {
+      console.log('[GlobalVariables] Found existing config on window:', windowConfig);
+      const payload: Partial<GlobalVariables> = {};
+      if (windowConfig.storeId) payload.storeId = windowConfig.storeId;
+      if (windowConfig.apiUrl) payload.apiUrl = windowConfig.apiUrl;
+      if (windowConfig.accessToken) payload.accessToken = windowConfig.accessToken;
+      if (windowConfig.storeName) payload.storeName = windowConfig.storeName;
+      dispatch({ type: 'INJECT_CONFIG', payload });
+    }
+
+    return () => {
+      window.removeEventListener('tanqory:config', handleConfigEvent);
+    };
+  }, []); // Run once on mount
 
   // Save to storage on change
   useEffect(() => {

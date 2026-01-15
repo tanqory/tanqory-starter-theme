@@ -143,6 +143,7 @@ export function AnnouncementBarSection({
   if (style === 'marquee') {
     return (
       <div
+        data-section="AnnouncementBarSection"
         style={{
           backgroundColor,
           color: textColor,
@@ -162,15 +163,17 @@ export function AnnouncementBarSection({
   const currentAnnouncement = announcements[currentIndex];
 
   return (
-    <AnnouncementBlock
-      message={currentAnnouncement.message}
-      link={currentAnnouncement.link}
-      linkText={currentAnnouncement.linkText}
-      backgroundColor={backgroundColor}
-      textColor={textColor}
-      dismissible={dismissible}
-      className={className}
-    />
+    <div data-section="AnnouncementBarSection">
+      <AnnouncementBlock
+        message={currentAnnouncement.message}
+        link={currentAnnouncement.link}
+        linkText={currentAnnouncement.linkText}
+        backgroundColor={backgroundColor}
+        textColor={textColor}
+        dismissible={dismissible}
+        className={className}
+      />
+    </div>
   );
 }
 

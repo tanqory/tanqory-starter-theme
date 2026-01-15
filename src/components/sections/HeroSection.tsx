@@ -253,7 +253,7 @@ export function HeroSection({
   const textColorValue = isLight ? 'rgba(255,255,255,0.9)' : theme.colors.foregroundSecondary;
 
   return (
-    <section style={sectionStyle} className={className}>
+    <section style={sectionStyle} className={className} data-section="HeroSection">
       {/* Overlay */}
       {overlay && backgroundImage && <div style={overlayStyle} />}
 

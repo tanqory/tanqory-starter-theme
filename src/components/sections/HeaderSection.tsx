@@ -187,7 +187,7 @@ export function HeaderSection({
 
   return (
     <>
-      <header style={headerStyle} className={className}>
+      <header data-section="HeaderSection" style={headerStyle} className={className}>
         <ContainerBlock>
           <div style={innerStyle}>
             {/* Left: Menu button (mobile) + Logo */}

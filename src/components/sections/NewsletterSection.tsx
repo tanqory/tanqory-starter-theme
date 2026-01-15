@@ -206,7 +206,7 @@ export function NewsletterSection({
   const textColorValue = isLight ? 'rgba(255,255,255,0.9)' : theme.colors.foregroundSecondary;
 
   return (
-    <section style={sectionStyle} className={className}>
+    <section data-section="NewsletterSection" style={sectionStyle} className={className}>
       {/* Overlay */}
       {overlay && backgroundImage && <div style={overlayStyle} />}
 

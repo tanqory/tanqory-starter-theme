@@ -173,7 +173,7 @@ export function ContactFormSection({
 
   if (status === 'success') {
     return (
-      <section style={sectionStyle} className={className}>
+      <section data-section="ContactFormSection" style={sectionStyle} className={className}>
         <ContainerBlock>
           <div style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'center' }}>
             <div
@@ -213,7 +213,7 @@ export function ContactFormSection({
   }
 
   return (
-    <section style={sectionStyle} className={className}>
+    <section data-section="ContactFormSection" style={sectionStyle} className={className}>
       <ContainerBlock>
         {/* Header */}
         {(title || description) && (

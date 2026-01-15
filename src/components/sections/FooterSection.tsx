@@ -171,7 +171,7 @@ export function FooterSection({
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer style={footerStyle} className={className}>
+    <footer data-section="FooterSection" style={footerStyle} className={className}>
       <ContainerBlock>
         <div style={gridStyle}>
           {/* Logo & Description Column */}

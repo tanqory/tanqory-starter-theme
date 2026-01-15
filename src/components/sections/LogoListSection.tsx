@@ -212,7 +212,7 @@ export function LogoListSection({
   };
 
   return (
-    <section style={sectionStyle} className={className}>
+    <section data-section="LogoListSection" style={sectionStyle} className={className}>
       <ContainerBlock>
         {/* Title */}
         {title && (

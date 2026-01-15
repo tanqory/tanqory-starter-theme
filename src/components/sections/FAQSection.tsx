@@ -156,7 +156,7 @@ export function FAQSection({
   const [leftItems, rightItems] = layout === 'two-column' ? splitItems(accordionItems) : [accordionItems, []];
 
   return (
-    <section style={sectionStyle} className={className}>
+    <section data-section="FAQSection" style={sectionStyle} className={className}>
       <ContainerBlock>
         {/* Header */}
         {(title || description) && (

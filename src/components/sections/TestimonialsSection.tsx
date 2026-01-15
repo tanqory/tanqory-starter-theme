@@ -184,7 +184,7 @@ export function TestimonialsSection({
   ));
 
   return (
-    <section style={sectionStyle} className={className}>
+    <section data-section="TestimonialsSection" style={sectionStyle} className={className}>
       <ContainerBlock>
         {/* Header */}
         {(title || description) && (

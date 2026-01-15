@@ -219,7 +219,7 @@ export function GallerySection({
   };
 
   return (
-    <section style={sectionStyle} className={className}>
+    <section data-section="GallerySection" style={sectionStyle} className={className}>
       <ContainerBlock>
         {/* Header */}
         {(title || description) && (

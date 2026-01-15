@@ -256,7 +256,7 @@ export function FeaturedCollectionSection({
   );
 
   return (
-    <section style={sectionStyle} className={className}>
+    <section data-section="FeaturedCollectionSection" style={sectionStyle} className={className}>
       <ContainerBlock>
         {providedProducts ? (
           // Use provided products

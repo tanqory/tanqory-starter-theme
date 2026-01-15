@@ -237,7 +237,7 @@ export function CollectionListSection({
   );
 
   return (
-    <section style={sectionStyle} className={className}>
+    <section data-section="CollectionListSection" style={sectionStyle} className={className}>
       <ContainerBlock>
         {providedCollections ? (
           // Use provided collections

@@ -263,7 +263,7 @@ export function BannerSection({
   const textColorValue = isLight ? 'rgba(255,255,255,0.9)' : theme.colors.foregroundSecondary;
 
   return (
-    <section style={sectionStyle} className={className}>
+    <section data-section="BannerSection" style={sectionStyle} className={className}>
       <ContainerBlock variant={fullWidth ? 'full' : 'page'}>
         <div style={bannerStyle}>
           {backgroundImage && <div style={overlayStyle} />}
