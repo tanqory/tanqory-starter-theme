@@ -118,6 +118,49 @@ export const AppVariables: GlobalVariables = {
 };
 
 // =============================================================================
+// URL Config Helper
+// =============================================================================
+
+/**
+ * Extract config from URL search params or hash
+ * Supports: ?storeId=xxx&pk=xxx or #storeId=xxx&pk=xxx
+ */
+const getConfigFromUrl = (): Partial<GlobalVariables> => {
+  try {
+    const config: Partial<GlobalVariables> = {};
+
+    // Try URL search params first
+    const urlParams = new URLSearchParams(window.location.search);
+
+    // Try hash params as fallback (for SPA routing)
+    const hashParams = window.location.hash.includes('?')
+      ? new URLSearchParams(window.location.hash.split('?')[1])
+      : null;
+
+    const getParam = (key: string): string | null => {
+      return urlParams.get(key) || hashParams?.get(key) || null;
+    };
+
+    const storeId = getParam('storeId') || getParam('store_id');
+    const publishableKey = getParam('pk') || getParam('publishableKey');
+    const apiUrl = getParam('apiUrl') || getParam('api_url');
+
+    if (storeId) config.storeId = storeId;
+    if (publishableKey) config.publishableKey = publishableKey;
+    if (apiUrl) config.apiUrl = apiUrl;
+
+    if (Object.keys(config).length > 0) {
+      console.log('[GlobalVariables] Config from URL:', config);
+    }
+
+    return config;
+  } catch (e) {
+    console.warn('Failed to parse URL config:', e);
+    return {};
+  }
+};
+
+// =============================================================================
 // Storage Helpers
 // =============================================================================
 
@@ -200,10 +243,12 @@ export interface GlobalVariableProviderProps {
 export function GlobalVariableProvider({ children, initialValues }: GlobalVariableProviderProps) {
   const [state, dispatch] = useReducer(reducer, { ...AppVariables, ...initialValues });
 
-  // Load from storage on mount
+  // Load from storage and URL config on mount
   useEffect(() => {
     const stored = loadFromStorage();
-    dispatch({ type: 'LOAD_FROM_STORAGE', payload: { ...stored, ...initialValues } });
+    const urlConfig = getConfigFromUrl();
+    // Priority: URL params > initialValues > stored values
+    dispatch({ type: 'LOAD_FROM_STORAGE', payload: { ...stored, ...initialValues, ...urlConfig } });
   }, [initialValues]);
 
   // Listen for config injection from Studio (via editor-bridge.ts)
