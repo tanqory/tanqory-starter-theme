@@ -494,11 +494,12 @@ if (window.parent !== window) {
     }
 
     // =========================================================================
-    // CONFIG INJECTION: Receive storeId, apiUrl from Studio
+    // CONFIG INJECTION: Receive storeId, publishableKey, apiUrl from Studio
     // =========================================================================
     if (e.data.type === 'TANQORY_SET_CONFIG' && e.data.payload) {
       const config = e.data.payload as {
         storeId?: string;
+        publishableKey?: string;
         apiUrl?: string;
         accessToken?: string;
         storeName?: string;
@@ -526,6 +527,7 @@ if (window.parent !== window) {
         const updated = {
           ...current,
           storeId: config.storeId || current.storeId,
+          publishableKey: config.publishableKey || current.publishableKey,
           apiUrl: config.apiUrl || current.apiUrl,
           accessToken: config.accessToken || current.accessToken,
           storeName: config.storeName || current.storeName,

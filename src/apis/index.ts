@@ -122,3 +122,21 @@ export type {
   Menu,
   MenuItem,
 } from './StoreApi';
+
+// Template
+export {
+  TemplateApi,
+  templateByScreenTypeGET,
+  templateByHandleGET,
+  templatesGET,
+  useTemplateByScreenTypeGET,
+  useTemplateByHandleGET,
+  useTemplatesGET,
+  FetchTemplate,
+  FetchTemplateByHandle,
+  FetchTemplates,
+} from './TemplateApi';
+export type {
+  TemplateResponse,
+  TemplatesResponse,
+} from './TemplateApi';

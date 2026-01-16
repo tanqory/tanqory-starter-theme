@@ -14,6 +14,7 @@ import { AddToCartBlock } from '../blocks/AddToCartBlock';
 import { AccordionBlock } from '../blocks/AccordionBlock';
 import { BadgeBlock } from '../blocks/BadgeBlock';
 import { BreadcrumbBlock, BreadcrumbItem } from '../blocks/BreadcrumbBlock';
+import { FetchProduct } from '../../apis/ProductsApi';
 import type { Product, ProductVariant } from '../../apis/ProductsApi';
 
 // =============================================================================
@@ -21,7 +22,10 @@ import type { Product, ProductVariant } from '../../apis/ProductsApi';
 // =============================================================================
 
 export interface ProductDetailSectionProps {
+  /** Direct product data (skip API fetch) */
   product?: Product;
+  /** Product handle for auto-fetch */
+  productHandle?: string;
   breadcrumbs?: BreadcrumbItem[];
   showBreadcrumbs?: boolean;
   galleryLayout?: 'thumbnails-left' | 'thumbnails-bottom' | 'grid';
@@ -118,7 +122,8 @@ export const ProductDetailSectionSchema = {
 // =============================================================================
 
 export function ProductDetailSection({
-  product,
+  product: providedProduct,
+  productHandle,
   breadcrumbs,
   showBreadcrumbs = true,
   galleryLayout = 'thumbnails-left',
@@ -130,6 +135,91 @@ export function ProductDetailSection({
   onAddToCart,
   className,
 }: ProductDetailSectionProps) {
+  // If product is provided directly, render it
+  if (providedProduct) {
+    return (
+      <ProductDetailContent
+        product={providedProduct}
+        breadcrumbs={breadcrumbs}
+        showBreadcrumbs={showBreadcrumbs}
+        galleryLayout={galleryLayout}
+        showVendor={showVendor}
+        showSku={showSku}
+        showDescription={showDescription}
+        showAccordions={showAccordions}
+        accordionItems={accordionItems}
+        onAddToCart={onAddToCart}
+        className={className}
+      />
+    );
+  }
+
+  // Otherwise, fetch by handle
+  if (productHandle) {
+    return (
+      <FetchProduct handle={productHandle}>
+        {({ loading, data, error }) => {
+          if (loading || !data) {
+            return <ProductDetailPlaceholder />;
+          }
+          if (error) {
+            return <ProductDetailPlaceholder />;
+          }
+          return (
+            <ProductDetailContent
+              product={data}
+              breadcrumbs={breadcrumbs}
+              showBreadcrumbs={showBreadcrumbs}
+              galleryLayout={galleryLayout}
+              showVendor={showVendor}
+              showSku={showSku}
+              showDescription={showDescription}
+              showAccordions={showAccordions}
+              accordionItems={accordionItems}
+              onAddToCart={onAddToCart}
+              className={className}
+            />
+          );
+        }}
+      </FetchProduct>
+    );
+  }
+
+  // No data source
+  return <ProductDetailPlaceholder />;
+}
+
+// =============================================================================
+// Internal Content Component
+// =============================================================================
+
+interface ProductDetailContentProps {
+  product: Product;
+  breadcrumbs?: BreadcrumbItem[];
+  showBreadcrumbs?: boolean;
+  galleryLayout?: 'thumbnails-left' | 'thumbnails-bottom' | 'grid';
+  showVendor?: boolean;
+  showSku?: boolean;
+  showDescription?: boolean;
+  showAccordions?: boolean;
+  accordionItems?: { id: string; title: string; content: string }[];
+  onAddToCart?: (variantId: string, quantity: number) => void;
+  className?: string;
+}
+
+function ProductDetailContent({
+  product,
+  breadcrumbs,
+  showBreadcrumbs = true,
+  galleryLayout = 'thumbnails-left',
+  showVendor = true,
+  showSku = false,
+  showDescription = true,
+  showAccordions = true,
+  accordionItems,
+  onAddToCart,
+  className,
+}: ProductDetailContentProps) {
   const theme = TanqoryTheme;
   const sectionStyles = SectionStyles(theme);
 
@@ -178,10 +268,6 @@ export function ProductDetailSection({
   ];
 
   const finalAccordions = accordionItems || defaultAccordions;
-
-  if (!product) {
-    return <ProductDetailPlaceholder />;
-  }
 
   const sectionStyle: React.CSSProperties = {
     ...sectionStyles.base,

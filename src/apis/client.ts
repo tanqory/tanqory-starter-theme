@@ -129,11 +129,22 @@ export class ApiClient {
 
 /**
  * Create API client from global variables
+ *
+ * Uses X-Publishable-Key for SDK authentication (like Stripe's pk_live_*)
+ * Falls back to X-Store-Id for backward compatibility
  */
 export function createApiClient(Constants: GlobalVariables): ApiClient {
-  const client = new ApiClient(Constants.apiUrl, {
-    'X-Store-Id': Constants.storeId,
-  });
+  const headers: Record<string, string> = {};
+
+  // Prefer publishableKey for SDK authentication
+  if (Constants.publishableKey) {
+    headers['X-Publishable-Key'] = Constants.publishableKey;
+  } else if (Constants.storeId) {
+    // Fallback to X-Store-Id for backward compatibility
+    headers['X-Store-Id'] = Constants.storeId;
+  }
+
+  const client = new ApiClient(Constants.apiUrl, headers);
 
   if (Constants.accessToken) {
     client.setAuthToken(Constants.accessToken);

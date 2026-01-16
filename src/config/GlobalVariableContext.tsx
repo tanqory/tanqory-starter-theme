@@ -24,6 +24,7 @@ export interface Customer {
 export interface GlobalVariables {
   // Store Configuration
   storeId: string;
+  publishableKey: string;  // SDK publishable key (pk_live_* or pk_test_*)
   storeName: string;
   storeUrl: string;
   apiUrl: string;
@@ -80,7 +81,8 @@ export const DeviceVariables: Partial<GlobalVariables> = {
 // App variables (memory only)
 export const AppVariables: GlobalVariables = {
   // Store
-  storeId: '',
+  storeId: import.meta.env.VITE_STORE_ID || '',
+  publishableKey: import.meta.env.VITE_PUBLISHABLE_KEY || '',
   storeName: 'Tanqory Store',
   storeUrl: '',
   apiUrl: import.meta.env.VITE_API_URL || 'https://api.tanqory.com',
@@ -209,6 +211,7 @@ export function GlobalVariableProvider({ children, initialValues }: GlobalVariab
     const handleConfigEvent = (event: Event) => {
       const customEvent = event as CustomEvent<{
         storeId?: string;
+        publishableKey?: string;
         apiUrl?: string;
         accessToken?: string;
         storeName?: string;
@@ -220,6 +223,7 @@ export function GlobalVariableProvider({ children, initialValues }: GlobalVariab
         // Use INJECT_CONFIG to bypass __loaded__ check
         const payload: Partial<GlobalVariables> = {};
         if (config.storeId) payload.storeId = config.storeId;
+        if (config.publishableKey) payload.publishableKey = config.publishableKey;
         if (config.apiUrl) payload.apiUrl = config.apiUrl;
         if (config.accessToken) payload.accessToken = config.accessToken;
         if (config.storeName) payload.storeName = config.storeName;
@@ -232,6 +236,7 @@ export function GlobalVariableProvider({ children, initialValues }: GlobalVariab
     // Also check for config that was set before provider mounted
     const windowConfig = (window as unknown as { __TANQORY_CONFIG__?: {
       storeId?: string;
+      publishableKey?: string;
       apiUrl?: string;
       accessToken?: string;
       storeName?: string;
@@ -241,6 +246,7 @@ export function GlobalVariableProvider({ children, initialValues }: GlobalVariab
       console.log('[GlobalVariables] Found existing config on window:', windowConfig);
       const payload: Partial<GlobalVariables> = {};
       if (windowConfig.storeId) payload.storeId = windowConfig.storeId;
+      if (windowConfig.publishableKey) payload.publishableKey = windowConfig.publishableKey;
       if (windowConfig.apiUrl) payload.apiUrl = windowConfig.apiUrl;
       if (windowConfig.accessToken) payload.accessToken = windowConfig.accessToken;
       if (windowConfig.storeName) payload.storeName = windowConfig.storeName;

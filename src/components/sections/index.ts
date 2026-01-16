@@ -2,6 +2,10 @@
 // Sections Index (Draftbit pattern)
 // =============================================================================
 
+// Section Renderer (Dynamic template renderer)
+export { SectionRenderer, TemplateRenderer } from './SectionRenderer';
+export type { SectionRendererProps, TemplateRendererProps } from './SectionRenderer';
+
 // Layout Sections
 export { HeaderSection, HeaderSectionSchema } from './HeaderSection';
 export type { HeaderSectionProps } from './HeaderSection';

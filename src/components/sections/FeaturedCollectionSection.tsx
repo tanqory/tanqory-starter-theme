@@ -13,6 +13,7 @@ import { CarouselBlock } from '../blocks/CarouselBlock';
 import { ProductCardBlock } from '../blocks/ProductCardBlock';
 import { FetchProducts } from '../../apis/ProductsApi';
 import type { Product } from '../../apis/ProductsApi';
+import { useLivePreviewProps } from '../../hooks';
 
 // =============================================================================
 // Types
@@ -154,22 +155,28 @@ export const FeaturedCollectionSectionSchema = {
 // Component
 // =============================================================================
 
-export function FeaturedCollectionSection({
-  title = 'Featured Products',
-  description,
-  collectionHandle,
-  products: providedProducts,
-  limit = 4,
-  layout = 'grid',
-  columns = { mobile: 2, tablet: 3, desktop: 4 },
-  showViewAll = true,
-  viewAllLink,
-  viewAllText = 'View all',
-  imageRatio = 'portrait',
-  showVendor = false,
-  onProductClick,
-  className,
-}: FeaturedCollectionSectionProps) {
+export function FeaturedCollectionSection(props: FeaturedCollectionSectionProps) {
+  // Enable live preview updates from Studio Editor
+  // When Studio sends TANQORY_UPDATE_SECTION_PROPS, this will re-render with new values
+  const liveProps = useLivePreviewProps('FeaturedCollectionSection', props);
+
+  const {
+    title = 'Featured Products',
+    description,
+    collectionHandle,
+    products: providedProducts,
+    limit = 4,
+    layout = 'grid',
+    columns = { mobile: 2, tablet: 3, desktop: 4 },
+    showViewAll = true,
+    viewAllLink,
+    viewAllText = 'View all',
+    imageRatio = 'portrait',
+    showVendor = false,
+    onProductClick,
+    className,
+  } = liveProps;
+
   const theme = TanqoryTheme;
   const sectionStyles = SectionStyles(theme);
 

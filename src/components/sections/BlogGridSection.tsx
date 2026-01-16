@@ -12,6 +12,7 @@ import { BlogPostCardBlock } from '../blocks/BlogPostCardBlock';
 import { PaginationBlock } from '../blocks/PaginationBlock';
 import { FetchArticles } from '../../apis/BlogApi';
 import type { Article } from '../../apis/BlogApi';
+import { useLivePreviewProps } from '../../hooks';
 
 // =============================================================================
 // Types
@@ -140,25 +141,30 @@ export const BlogGridSectionSchema = {
 // Component
 // =============================================================================
 
-export function BlogGridSection({
-  title = 'Latest Articles',
-  description,
-  blogHandle,
-  articles: providedArticles,
-  limit = 6,
-  columns = { mobile: 1, tablet: 2, desktop: 3 },
-  imageRatio = 'landscape',
-  showExcerpt = true,
-  showAuthor = true,
-  showDate = true,
-  showTags = false,
-  showPagination = true,
-  currentPage = 1,
-  totalPages = 1,
-  onArticleClick,
-  onPageChange,
-  className,
-}: BlogGridSectionProps) {
+export function BlogGridSection(props: BlogGridSectionProps) {
+  // Enable live preview updates from Studio Editor
+  const liveProps = useLivePreviewProps('BlogGridSection', props);
+
+  const {
+    title = 'Latest Articles',
+    description,
+    blogHandle,
+    articles: providedArticles,
+    limit = 6,
+    columns = { mobile: 1, tablet: 2, desktop: 3 },
+    imageRatio = 'landscape',
+    showExcerpt = true,
+    showAuthor = true,
+    showDate = true,
+    showTags = false,
+    showPagination = true,
+    currentPage = 1,
+    totalPages = 1,
+    onArticleClick,
+    onPageChange,
+    className,
+  } = liveProps;
+
   const theme = TanqoryTheme;
   const sectionStyles = SectionStyles(theme);
 
@@ -244,7 +250,7 @@ export function BlogGridSection({
   );
 
   return (
-    <section style={sectionStyle} className={className}>
+    <section data-section="BlogGridSection" style={sectionStyle} className={className}>
       <ContainerBlock>
         {providedArticles ? (
           content(providedArticles)

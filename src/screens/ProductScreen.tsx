@@ -1,16 +1,15 @@
 // =============================================================================
-// Product Screen (Draftbit pattern)
+// Product Screen (Template-driven)
 // =============================================================================
 
 import React, { useEffect } from 'react';
 import { useGlobalVariable, useSetGlobalVariable, getLogoUrl } from '../config/GlobalVariableContext';
 import { HeaderSection } from '../components/sections/HeaderSection';
 import { FooterSection } from '../components/sections/FooterSection';
-import { ProductDetailSection } from '../components/sections/ProductDetailSection';
-import { RelatedProductsSection } from '../components/sections/RelatedProductsSection';
-import { RecentlyViewedSection } from '../components/sections/RecentlyViewedSection';
+import { TemplateRenderer } from '../components/sections/SectionRenderer';
 import { BreadcrumbBlock } from '../components/blocks/BreadcrumbBlock';
 import { ContainerBlock } from '../components/blocks/ContainerBlock';
+import { useTemplate } from '../hooks/useTemplate';
 import { useProductByHandleGET } from '../apis';
 import { TanqoryTheme } from '../themes';
 import type { Product } from '../apis';
@@ -43,6 +42,9 @@ export function ProductScreen({ navigation, route }: ProductScreenProps) {
 
   const logoUrl = getLogoUrl(STORE_CONFIG);
 
+  // Load template for product screen
+  const { sections, loading: templateLoading } = useTemplate('product');
+
   // Fetch product data
   const { data: product, isLoading: loading, error } = useProductByHandleGET(productHandle);
 
@@ -74,8 +76,15 @@ export function ProductScreen({ navigation, route }: ProductScreenProps) {
     }
   };
 
+  const handleProductClick = (p: unknown) => {
+    const prod = p as { handle?: string };
+    if (prod.handle) {
+      navigation?.navigate('Product', { handle: prod.handle });
+    }
+  };
+
   // Loading state
-  if (loading) {
+  if (loading || templateLoading) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         <HeaderSection
@@ -150,25 +159,13 @@ export function ProductScreen({ navigation, route }: ProductScreenProps) {
           </ContainerBlock>
         </div>
 
-        {/* Product Detail */}
-        <ProductDetailSection
-          product={product}
-          showBreadcrumbs={false}
-          galleryLayout="thumbnails-left"
-        />
-
-        {/* Related Products */}
-        <RelatedProductsSection
-          title="You May Also Like"
-          productId={product.id}
-          maxProducts={4}
-        />
-
-        {/* Recently Viewed */}
-        <RecentlyViewedSection
-          title="Recently Viewed"
-          maxProducts={6}
-          layout="carousel"
+        {/* Template-driven sections with product context */}
+        <TemplateRenderer
+          sections={sections}
+          context={{
+            productHandle: productHandle,
+          }}
+          onProductClick={handleProductClick}
         />
       </main>
 

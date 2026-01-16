@@ -9,6 +9,10 @@ export default defineConfig({
     allowedHosts: true,
     watch: {
       usePolling: true,
+      interval: 100, // Poll every 100ms for file changes
+    },
+    hmr: {
+      overlay: true, // Show error overlay
     },
     // CORS headers for iframe embedding from Studio
     headers: {
